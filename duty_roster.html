@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Duty Roster - VSU</title>
+    <style>
+        /* =========================================
+           ১. সাধারণ স্টাইল (Web UI - Advanced Design)
+           ========================================= */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .app-container {
+            max-width: 1050px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        /* কন্ট্রোল প্যানেল */
+        .controls {
+            background: #0b3c5d;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .controls-title {
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+
+        .btn-group { display: flex; gap: 15px; }
+
+        .controls button, .controls a {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-transform: uppercase;
+        }
+        .home-btn { background: #e9ecef; color: #0b3c5d; }
+        .home-btn:hover { background: #d1d8e0; transform: translateY(-2px); }
+        .print-btn { background: #d9b310; color: #0b3c5d; }
+        .print-btn:hover { background: #c5a310; transform: translateY(-2px); }
+
+        .document-area { padding: 30px 40px; }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #0b3c5d;
+        }
+        .header-section h2 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 1px; }
+        .header-section h3 { margin: 8px 0 0 0; font-size: 17px; color: #328cc1; font-weight: 600; }
+
+        /* =========================================
+           টেবিল রেস্পন্সিভ স্ক্রল ডিজাইন
+           ========================================= */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto; /* মোবাইলের জন্য ডানে-বাঁয়ে স্ক্রল */
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #d1d8e0;
+            background: #fff;
+        }
+
+        table {
+            width: 100%;
+            min-width: 800px; /* ছোট স্ক্রিনেও টেবিল ছোট হবে না, স্ক্রল হবে */
+            border-collapse: collapse;
+            font-size: 15px;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            vertical-align: middle;
+            border-bottom: 1px solid #d1d8e0;
+            border-right: 1px solid #d1d8e0;
+        }
+        
+        th:last-child, td:last-child { border-right: none; }
+        tr:last-child td { border-bottom: none; }
+
+        th {
+            background-color: #0b3c5d;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        tbody tr:nth-child(even) { background-color: #f8fbfd; }
+        tbody tr:hover { background-color: #eef5f9; }
+
+        .col-days { width: 15%; font-weight: 700; color: #0b3c5d; text-align: center; background-color: #f1f5f9; }
+        .col-p2 { width: 45%; line-height: 1.6; }
+        .col-p3 { width: 15%; text-align: center; font-weight: bold; color: #e85a4f; }
+        .col-rest { width: 25%; text-align: center; font-weight: bold; color: #27ae60; background-color: #fafdfa; }
+
+        .footer-notes {
+            margin-top: 30px;
+            font-size: 14px;
+            line-height: 1.6;
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-left: 5px solid #d9b310;
+            border-radius: 4px;
+        }
+        .footer-notes .note-point { display: flex; gap: 15px; font-weight: 600; color: #333; }
+        
+        .copy-to { margin-top: 25px; font-weight: bold; font-size: 14px; color: #555; }
+
+        /* =========================================
+           ৩. PRINT স্টাইল (Clean Official format)
+           ========================================= */
+        @media print {
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { background: #fff !important; font-size: 14px !important; color: #000 !important; font-family: 'Times New Roman', Times, serif !important; }
+            @page { size: A4 portrait; margin: 15mm; }
+            
+            .app-container { box-shadow: none !important; border: none !important; margin: 0 !important; padding: 0 !important;}
+            .controls { display: none !important; }
+            .document-area { padding: 0 !important; }
+
+            .header-section h2 { font-size: 22px !important; text-decoration: underline; color: #000 !important; }
+            .header-section h3 { font-size: 16px !important; color: #000 !important; }
+
+            .table-responsive { overflow: visible !important; box-shadow: none !important; border: none !important; }
+            table { min-width: 100% !important; margin-top: 15px !important; border: 1px solid #000 !important;}
+            th, td { border: 1px solid #000 !important; padding: 8px 6px !important; background-color: transparent !important; color: #000 !important; }
+            
+            .footer-notes { margin-top: 25px !important; background: transparent !important; border: none !important; padding: 0 !important; }
+            .copy-to { margin-top: 25px !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <div class="controls no-print">
+            <div class="controls-title">📅 Duty Roster Module</div>
+            <div class="btn-group">
+                <a href="index.html" class="home-btn">⬅️ Back to Home</a>
+                <button class="print-btn" onclick="window.print()">🖨️ Print Roster</button>
+            </div>
+        </div>
+
+        <div class="document-area">
+            
+            <div class="header-section">
+                <h2>भारतीय रेल INDIAN RAILWAYS</h2>
+                <h3>Roster Duty Of Staff Under SSE/EL(G)/VSU</h3>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="col-days">Days</th>
+                            <th class="col-p2">P2</th>
+                            <th class="col-p3">P3</th>
+                            <th class="col-rest">Rest</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="col-days">Monday</td>
+                            <td class="col-p2">S. Bhattacharya, S. Sarkhel, R. Kumar<br>S.K. Nandi, P. Goswami, S. Kumar</td>
+                            <td class="col-p3">G. Bouri</td>
+                            <td class="col-rest">D. Karmakar</td>
+                        </tr>
+                        <tr>
+                            <td class="col-days">Tuesday</td>
+                            <td class="col-p2">S.K. Nandi, P. Goswami, S. Kumar<br>D. Karmakar, G. Bouri, S. Sarkhel</td>
+                            <td class="col-p3">R. Kumar</td>
+                            <td class="col-rest">S. Bhattacharya</td>
+                        </tr>
+                        <tr>
+                            <td class="col-days">Wednesday</td>
+                            <td class="col-p2">S. Sarkhel, S. Bhattacharya, R. Kumar<br>G. Bouri, S. Kumar, D. Karmakar</td>
+                            <td class="col-p3">P. Goswami</td>
+                            <td class="col-rest">S. K. Nandi</td>
+                        </tr>
+                        <tr>
+                            <td class="col-days">Thursday</td>
+                            <td class="col-p2">S.K. Nandi, G. Bouri, P. Goswami, S. Sarkhel<br>S. Bhattacharya, R. Kumar, D. Karmakar</td>
+                            <td class="col-p3">S. Kumar</td>
+                            <td class="col-rest" rowspan="4">
+                                P2 staff of Sunday<br>except S.K. Nandi<br><br><br>
+                                S. Bhattacharya<br>and
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-days">Friday</td>
+                            <td class="col-p2">G. Bouri, P. Goswami, S. Kumar, S. Bhattacharya<br>R. Kumar, D. Karmakar, S. Sarkhel</td>
+                            <td class="col-p3">S. K. Nandi</td>
+                        </tr>
+                        <tr>
+                            <td class="col-days">Saturday</td>
+                            <td class="col-p2">S.K. Nandi, P. Goswami, S. Kumar, S. Bhattacharya<br>R. Kumar, D. Karmakar, G. Bouri</td>
+                            <td class="col-p3">S. Sarkhel</td>
+                        </tr>
+                        <tr>
+                            <td class="col-days">Sunday</td>
+                            <td class="col-p2">S.K. Nandi, S. Bhattacharya and one staff except S. Sarkhel and<br>R. Kumar( S. Kumar, P. Goswami, G. Bouri)</td>
+                            <td class="col-p3">D. Karmakar</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="footer-notes">
+                <div class="note-point">
+                    <div>A.</div>
+                    <div>Staff who performing P2 Duty on Sunday except S.K. Nandi and S. Bhattacharya will avail rest on Thursday, in case of S. Kumar will avail CR of Sunday P2 duty on Friday (Perform P3 duty on Thursday)</div>
+                </div>
+            </div>
+
+            <div class="copy-to">
+                C/O to 1) DEE/G, Adra &nbsp;&nbsp; 2) SSE/EL/BQA
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
