@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bishnupur Electric (G) Portal</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 0; }
+        
+        /* Header Design */
+        .ir-header { background-color: #0b3c5d; color: white; padding: 20px 30px; display: flex; align-items: center; border-bottom: 5px solid #d9b310; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .ir-logo { width: 75px; height: 75px; margin-right: 20px; background-color: white; border-radius: 50%; padding: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.3); object-fit: contain; }
+        .ir-titles h1 { margin: 0; font-size: 28px; letter-spacing: 1.5px; text-transform: uppercase; }
+        .ir-titles p { margin: 5px 0 0 0; font-size: 15px; color: #a8d0e6; font-weight: bold; }
+        
+        /* Main Container */
+        .container { max-width: 1100px; margin: 40px auto; text-align: center; padding: 0 20px; }
+        .container h2 { color: #0b3c5d; margin-bottom: 30px; font-size: 24px; text-transform: uppercase; border-bottom: 3px solid #d9b310; display: inline-block; padding-bottom: 10px; }
+        
+        /* Grid Layout for Cards */
+        .card-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; justify-items: center; }
+        
+        /* Card Design */
+        .card { background: white; width: 100%; max-width: 260px; padding: 30px 20px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); border-top: 5px solid #328cc1; transition: all 0.3s ease; text-decoration: none; color: #333; display: flex; flex-direction: column; align-items: center; box-sizing: border-box; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 12px 25px rgba(0,0,0,0.15); border-top-color: #d9b310; }
+        .card-icon { font-size: 55px; margin-bottom: 15px; }
+        .card h3 { margin: 0 0 10px 0; font-size: 18px; color: #0b3c5d; text-transform: uppercase; }
+        .card p { font-size: 13px; color: #666; margin: 0; line-height: 1.4; }
+        
+        /* Footer */
+        .footer { text-align: center; padding: 25px; margin-top: 50px; background-color: #e9ecef; color: #555; font-size: 13px; border-top: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+
+    <header class="ir-header">
+        <img src="images.jpeg" alt="IR Logo" class="ir-logo">
+        <div class="ir-titles">
+            <h1>Indian Railways</h1>
+            <p>Office of the SSE/Elect(G) | Bishnupur, Adra Division</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>Dashboard & Records Portal</h2>
+        
+        <div class="card-container">
+            <a href="table7.html" class="card">
+                <div class="card-icon">🚂</div>
+                <h3>TA Record (Table 7)</h3>
+                <p>Manage and print Traveling Allowance records</p>
+            </a>
+
+            <a href="table5.html" class="card">
+                <div class="card-icon">⏱️</div>
+                <h3>NDA Record (Table 5)</h3>
+                <p>Manage Night Duty Allowance records</p>
+            </a>
+
+            <a href="lift_report.html" class="card">
+                <div class="card-icon">🛗</div>
+                <h3>Lift Safety</h3>
+                <p>Daily checking report for Lift Operation</p>
+            </a>
+
+            <a href="duty_roster.html" class="card">
+                <div class="card-icon">📅</div>
+                <h3>Staff Duty Roster</h3>
+                <p>Check and update monthly staff duty schedules</p>
+            </a>
+
+            <a href="material_stock.html" class="card">
+                <div class="card-icon">📦</div>
+                <h3>Material Stock</h3>
+                <p>Track electrical materials and indents</p>
+            </a>
+        </div>
+    </div>
+
+    <div class="footer">
+        &copy; 2026 Developed for Internal Operations | Bishnupur Electric (G), South Eastern Railway.
+    </div>
+
+</body>
+</html>
