@@ -1,4 +1,4 @@
-<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -79,12 +79,11 @@
             gap: 15px;
         }
         
-        /* Left VSU Logo */
         .vsu-logo-left {
             width: 55px;
             height: 55px;
             background-color: white;
-            border-radius: 8px; /* Slightly square with rounded corners */
+            border-radius: 8px; 
             padding: 3px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             object-fit: contain;
@@ -106,7 +105,6 @@
             justify-content: center;
         }
 
-        /* Search Bar */
         .search-box {
             position: relative;
             width: 100%;
@@ -133,7 +131,6 @@
             gap: 20px;
         }
 
-        /* Theme Toggle & Clock */
         .theme-btn {
             background: rgba(128, 128, 128, 0.1);
             border: 1px solid var(--glass-border);
@@ -152,12 +149,11 @@
         .clock-time { font-size: 18px; font-weight: bold; margin: 0; color: var(--text-main); font-family: monospace;}
         .clock-date { font-size: 11px; margin: 0; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;}
 
-        /* Right Indian Railway Logo */
         .ir-logo-right {
             width: 55px;
             height: 55px;
             background-color: white;
-            border-radius: 50%; /* Circle shape for IR logo */
+            border-radius: 50%; 
             padding: 3px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             object-fit: contain;
@@ -265,6 +261,8 @@
         .module-card:nth-child(3) { animation-delay: 0.3s; }
         .module-card:nth-child(4) { animation-delay: 0.4s; }
         .module-card:nth-child(5) { animation-delay: 0.5s; }
+        .module-card:nth-child(6) { animation-delay: 0.6s; } /* New Card */
+        .module-card:nth-child(7) { animation-delay: 0.7s; } /* New Card */
 
         @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
 
@@ -335,7 +333,7 @@
             <div class="stat-box">
                 <div class="stat-icon">📑</div>
                 <div class="stat-info">
-                    <h4>05</h4>
+                    <h4>07</h4> 
                     <p>Total Modules</p>
                 </div>
             </div>
@@ -380,6 +378,18 @@
                 <div class="card-icon">📦</div>
                 <h3>Material Stock</h3>
                 <p>Track electrical inventory, store materials and indents.</p>
+            </a>
+
+            <a href="notifications.html" class="module-card" data-title="Notifications Office Notices Circulars">
+                <div class="card-icon">📢</div>
+                <h3>Office Notifications</h3>
+                <p>View all official office notices, circulars, and latest announcements.</p>
+            </a>
+
+            <a href="breakdown.html" class="module-card" data-title="Breakdown Report Daily Work Maintenance">
+                <div class="card-icon">🛠️</div>
+                <h3>Breakdown Report</h3>
+                <p>Log and track daily breakdown maintenance and work details.</p>
             </a>
 
         </div>
