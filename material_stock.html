@@ -1,0 +1,125 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material Stock - Bishnupur Electric (G)</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f4f7f6; 
+            margin: 0; 
+            padding: 0; 
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Header Design */
+        .ir-header { background-color: #0b3c5d; color: white; padding: 15px 30px; display: flex; align-items: center; border-bottom: 5px solid #d9b310; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .ir-logo { width: 60px; height: 60px; margin-right: 20px; background-color: white; border-radius: 50%; padding: 4px; box-shadow: 0 0 10px rgba(0,0,0,0.3); object-fit: contain; }
+        .ir-titles h1 { margin: 0; font-size: 24px; letter-spacing: 1px; text-transform: uppercase; }
+        .ir-titles p { margin: 5px 0 0 0; font-size: 14px; color: #a8d0e6; font-weight: bold; }
+        
+        /* Message Container */
+        .container { 
+            flex-grow: 1;
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 20px;
+        }
+        
+        .message-card { 
+            background: white; 
+            width: 100%; 
+            max-width: 500px; 
+            padding: 50px 30px; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+            border-top: 6px solid #d9b310; 
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .icon { 
+            font-size: 80px; 
+            margin-bottom: 20px; 
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-20px);}
+            60% {transform: translateY(-10px);}
+        }
+
+        .message-card h2 { 
+            color: #0b3c5d; 
+            margin: 0 0 15px 0; 
+            font-size: 28px; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+        }
+        
+        .message-card p { 
+            font-size: 16px; 
+            color: #555; 
+            line-height: 1.6; 
+            margin-bottom: 30px;
+        }
+        
+        .back-btn { 
+            background: #0b3c5d; 
+            color: white; 
+            padding: 12px 25px; 
+            font-size: 16px; 
+            font-weight: bold; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            text-decoration: none; 
+            display: inline-block; 
+            transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(11, 60, 93, 0.3);
+        }
+        .back-btn:hover { 
+            background: #328cc1; 
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(11, 60, 93, 0.4);
+        }
+        
+        /* Footer */
+        .footer { text-align: center; padding: 20px; background-color: #e9ecef; color: #555; font-size: 13px; border-top: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+
+    <header class="ir-header">
+        <img src="images.jpeg" alt="IR Logo" class="ir-logo">
+        <div class="ir-titles">
+            <h1>Indian Railways</h1>
+            <p>Office of the SSE/Elect(G) | Bishnupur</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="message-card">
+            <div class="icon">🚧</div>
+            <h2>Yet to be Updated!</h2>
+            <p>The <b>Material Stock</b> page is currently under development. We are working on adding new features. Please check back later.</p>
+            <a href="index.html" class="back-btn">⬅️ Back to Home</a>
+        </div>
+    </div>
+
+    <div class="footer">
+        &copy; 2026 Developed for Internal Operations | Bishnupur Electric (G), South Eastern Railway.
+    </div>
+
+</body>
+</html>
