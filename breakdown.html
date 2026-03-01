@@ -22,6 +22,7 @@
         body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; color: var(--text-main); background: var(--bg-gradient); background-size: 200% 200%; animation: gradientMove 15s ease infinite; display: flex; min-height: 100vh; overflow-x: hidden; transition: color 0.3s; }
         @keyframes gradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         
+        /* Sidebar & Header */
         .sidebar { width: var(--sidebar-width); background: var(--glass-bg); backdrop-filter: blur(15px); border-right: 1px solid var(--glass-border); position: fixed; top: 0; left: 0; height: 100vh; display: flex; flex-direction: column; box-shadow: var(--shadow); z-index: 2000; transition: transform 0.4s; }
         .sidebar.collapsed { transform: translateX(-100%); }
         .sidebar-header { padding: 20px; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; gap: 15px; position: relative;}
@@ -47,11 +48,13 @@
         .clock-date { font-size: 10px; margin: 0; color: var(--text-muted); text-transform: uppercase;}
         .ir-logo-right { width: 45px; height: 45px; background: white; border-radius: 50%; padding: 3px; border: 2px solid var(--accent); object-fit: contain; }
         
+        /* Table Layout & Controls */
         .content-area { padding: 25px; flex-grow: 1; width: 100%; box-sizing: border-box; overflow: hidden; }
         .app-container { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; box-shadow: var(--shadow); padding: 25px; width: 100%; box-sizing: border-box;}
         body.dark-mode .app-container { background: #1e293b; border-color: #334155; }
         
         .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; background: rgba(128,128,128,0.05); padding: 15px; border-radius: 8px; border: 1px solid var(--glass-border);}
+        
         .filter-group { display: flex; align-items: center; gap: 10px; font-weight: bold; color: var(--text-main);}
         .filter-group select { padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; color: #0f172a; font-size: 14px; font-weight: bold; outline: none; cursor: pointer;}
         
@@ -64,6 +67,7 @@
         .table-responsive { width: 100%; overflow-x: auto; border: 2px solid #94a3b8; border-radius: 4px; }
         table { width: 100%; min-width: 1300px; border-collapse: collapse; font-size: 14px; background: #ffffff; }
         body.dark-mode table { background: #0f172a; }
+        
         th, td { padding: 10px; text-align: left; vertical-align: top; border: 1px solid #94a3b8; color: #000;}
         body.dark-mode th, body.dark-mode td { border-color: #475569; color: #fff;}
         th { background: #e2e8f0; color: #0f172a; font-weight: bold; text-align: center; font-size: 13px;}
@@ -75,25 +79,51 @@
         .col-remarks { width: 150px; } .col-sign { width: 90px; } .col-action { width: 50px; text-align: center; }
 
         .edit-box { outline: none; min-height: 25px; width: 100%; line-height: 1.4; padding: 5px; border-radius: 4px; box-sizing: border-box; word-wrap: break-word; white-space: pre-wrap; font-weight: 500;}
-        @media screen { .edit-box:hover { background-color: #f1f5f9; } body.dark-mode .edit-box:hover { background-color: #334155; } .edit-box:focus { background-color: #fff; border: 2px dashed var(--accent); color: #000; } }
+        @media screen {
+            .edit-box:hover { background-color: #f1f5f9; }
+            body.dark-mode .edit-box:hover { background-color: #334155; }
+            .edit-box:focus { background-color: #fff; border: 2px dashed var(--accent); color: #000; }
+        }
         
         .del-btn { background: var(--danger); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold;}
         .del-btn:hover { opacity: 0.8; }
         .footer { text-align: center; padding: 20px; background: var(--glass-bg); color: var(--text-muted); font-size: 12px; border-top: 1px solid var(--glass-border); font-weight: bold; }
 
+        /* =========================================
+           PDF PRINT FIX (১০০% পারফেক্ট ল্যান্ডস্কেপ ফিট)
+           ========================================= */
         @media print {
-            * { margin: 0; padding: 0; box-sizing: border-box; } @page { size: A4 landscape; margin: 8mm; }
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            @page { size: A4 landscape; margin: 8mm; }
             body { background: #fff !important; color: #000 !important; }
             .sidebar, .smart-header, .top-bar, .col-action, .footer { display: none !important; }
             .main-wrapper { margin: 0 !important; width: 100% !important; }
             .content-area, .app-container { padding: 0 !important; border: none !important; box-shadow: none !important; background: transparent !important; }
-            .table-responsive { overflow: visible !important; border: none !important; }
-            table { width: 100% !important; min-width: 100% !important; max-width: 100% !important; border: 2px solid #000 !important; font-size: 10px !important; table-layout: auto; }
-            th, td { border: 1px solid #000 !important; padding: 4px 3px !important; color: #000 !important; word-wrap: break-word; }
-            th { background: #f1f1f1 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; font-size: 10px !important;}
-            .edit-box { border: none !important; background: transparent !important; padding: 0 !important; min-height: auto !important; color: #000 !important; }
+            
+            /* টেবিল ফিট করার লজিক */
+            .table-responsive { overflow: visible !important; border: none !important; width: 100% !important; }
+            table { width: 100% !important; max-width: 100% !important; min-width: 100% !important; border: 2px solid #000 !important; font-size: 9px !important; table-layout: fixed !important; }
+            th, td { border: 1px solid #000 !important; padding: 4px 2px !important; color: #000 !important; word-wrap: break-word !important; overflow-wrap: break-word !important; white-space: normal !important; }
+            th { background: #f1f1f1 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; font-size: 9px !important; font-weight: bold !important;}
+            .edit-box { border: none !important; background: transparent !important; padding: 0 !important; min-height: auto !important; color: #000 !important; word-break: break-word !important; }
+            
+            /* পার্সেন্টেজ অনুযায়ী কলাম সেট করা হলো যাতে পেজের বাইরে না যায় */
+            .col-date { width: 6% !important; } 
+            .col-time { width: 5% !important; } 
+            .col-sl { width: 4% !important; }
+            .col-nature { width: 16% !important; } 
+            .col-details { width: 15% !important; } 
+            .col-staff-booked { width: 13% !important; }
+            .col-cdate { width: 6% !important; } 
+            .col-work { width: 17% !important; }
+            .col-remarks { width: 11% !important; } 
+            .col-sign { width: 7% !important; } 
         }
-        @media (max-width: 950px) { .sidebar { transform: translateX(-100%); } .sidebar.active-mobile { transform: translateX(0); } .main-wrapper { margin-left: 0; width: 100%; } .close-sidebar-btn { display: block; } }
+
+        @media (max-width: 950px) {
+            .sidebar { transform: translateX(-100%); } .sidebar.active-mobile { transform: translateX(0); }
+            .main-wrapper { margin-left: 0; width: 100%; } .close-sidebar-btn { display: block; }
+        }
     </style>
 </head>
 <body>
@@ -200,7 +230,7 @@
     </div>
 
     <script>
-        // 1. Google Sheets Web App URL (আপনার তৈরি করা লিংক)
+        // 1. Google Sheets Web App URL (আপনার দেওয়া লিংক)
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyf_cu2PeJzpK97JA5zKGpqLrfgBXa01SdQNI5zfHvkohnCmBfV9LK5pU7ks8Hkov_p/exec';
 
         // 2. Sidebar & Clock Logic
@@ -230,7 +260,7 @@
             columns.forEach(col => {
                 const td = document.createElement('td');
                 const val = data[col] !== undefined ? data[col] : '';
-                td.innerHTML = `<div class="edit-box" contenteditable="true">${val}</div>`;
+                td.innerHTML = `<div class="edit-box" contenteditable="true" oninput="markUnsaved()">${val}</div>`;
                 tr.appendChild(td);
             });
 
@@ -241,9 +271,18 @@
             tbody.appendChild(tr);
         }
 
+        function markUnsaved() {
+            const saveBtn = document.querySelector('.btn-save');
+            if(saveBtn.innerHTML === '💾 Save Data') {
+                saveBtn.innerHTML = '💾 Save Data*';
+                saveBtn.style.background = '#eab308';
+            }
+        }
+
         function deleteRow(btn) {
             if(confirm("Delete this row? (Click 'Save Data' afterwards to update server)")) {
                 btn.parentElement.parentElement.remove();
+                markUnsaved();
             }
         }
 
@@ -255,7 +294,10 @@
             tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; padding: 25px; font-weight:bold; color: var(--accent); font-size: 16px;">⏳ Fetching live data from server... Please wait.</td></tr>';
 
             try {
-                const response = await fetch(SCRIPT_URL);
+                const response = await fetch(SCRIPT_URL + "?t=" + new Date().getTime(), {
+                    method: 'GET',
+                    redirect: 'follow'
+                });
                 const data = await response.json(); 
                 
                 let filteredData = [];
@@ -276,7 +318,7 @@
                     for(let i=0; i<5; i++) addRow();
                 }
             } catch (error) {
-                tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; padding: 25px; color: red; font-weight:bold;">❌ Failed to connect to server. Check your internet connection.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; padding: 25px; color: red; font-weight:bold;">❌ Failed to connect to server. Check your connection or App Script permission.</td></tr>';
             }
         }
 
@@ -316,7 +358,9 @@
             try {
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
-                    body: JSON.stringify(tableData)
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(tableData),
+                    redirect: 'follow'
                 });
                 
                 saveBtn.innerHTML = '✅ Saved Successfully!';
@@ -331,7 +375,7 @@
                 }, 3000);
             } catch (error) {
                 saveBtn.innerHTML = '❌ Save Failed';
-                setTimeout(() => { saveBtn.innerHTML = '💾 Save Data'; saveBtn.disabled = false; }, 3000);
+                setTimeout(() => { saveBtn.innerHTML = '💾 Save Data'; saveBtn.style.background = '#f59e0b'; saveBtn.style.color = '#000'; saveBtn.disabled = false; }, 3000);
                 alert("Failed to save data. Please check your internet connection.");
             }
         }
