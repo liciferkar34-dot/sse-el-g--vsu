@@ -58,11 +58,15 @@
         .filter-group { display: flex; align-items: center; gap: 10px; font-weight: bold; color: var(--text-main);}
         .filter-group select { padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; color: #0f172a; font-size: 14px; font-weight: bold; outline: none; cursor: pointer;}
         
-        .btn-group { display: flex; gap: 10px; }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap;}
         .btn { padding: 8px 15px; font-size: 13px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; transition: 0.3s; color: white; display: flex; align-items: center; gap: 5px;}
         .btn-add { background: var(--accent); } .btn-add:hover { background: #0369a1; }
         .btn-print { background: #475569; } .btn-print:hover { background: #334155; }
         .btn-save { background: #f59e0b; color: #000; min-width: 120px; justify-content: center;} .btn-save:hover { background: #d97706; color: #fff;}
+        .btn-login { background: var(--danger); } .btn-login:hover { background: #be123c; }
+        
+        /* সিকিউরিটির জন্য ক্লাস - ডিফল্টভাবে লুকানো থাকবে */
+        .admin-only { display: none; }
         
         .table-responsive { width: 100%; overflow-x: auto; border: 2px solid #94a3b8; border-radius: 4px; }
         table { width: 100%; min-width: 1300px; border-collapse: collapse; font-size: 14px; background: #ffffff; }
@@ -79,51 +83,28 @@
         .col-remarks { width: 150px; } .col-sign { width: 90px; } .col-action { width: 50px; text-align: center; }
 
         .edit-box { outline: none; min-height: 25px; width: 100%; line-height: 1.4; padding: 5px; border-radius: 4px; box-sizing: border-box; word-wrap: break-word; white-space: pre-wrap; font-weight: 500;}
-        @media screen {
-            .edit-box:hover { background-color: #f1f5f9; }
-            body.dark-mode .edit-box:hover { background-color: #334155; }
-            .edit-box:focus { background-color: #fff; border: 2px dashed var(--accent); color: #000; }
-        }
+        
+        /* Admin mode active hole hover effect asbe */
+        body.admin-mode .edit-box:hover { background-color: #f1f5f9; }
+        body.admin-mode.dark-mode .edit-box:hover { background-color: #334155; }
+        body.admin-mode .edit-box:focus { background-color: #fff; border: 2px dashed var(--accent); color: #000; }
         
         .del-btn { background: var(--danger); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold;}
         .del-btn:hover { opacity: 0.8; }
         .footer { text-align: center; padding: 20px; background: var(--glass-bg); color: var(--text-muted); font-size: 12px; border-top: 1px solid var(--glass-border); font-weight: bold; }
 
-        /* =========================================
-           PDF PRINT FIX (১০০% পারফেক্ট ল্যান্ডস্কেপ ফিট)
-           ========================================= */
         @media print {
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            @page { size: A4 landscape; margin: 8mm; }
-            body { background: #fff !important; color: #000 !important; }
-            .sidebar, .smart-header, .top-bar, .col-action, .footer { display: none !important; }
-            .main-wrapper { margin: 0 !important; width: 100% !important; }
-            .content-area, .app-container { padding: 0 !important; border: none !important; box-shadow: none !important; background: transparent !important; }
-            
-            /* টেবিল ফিট করার লজিক */
+            * { margin: 0; padding: 0; box-sizing: border-box; } @page { size: A4 landscape; margin: 8mm; }
+            body { background: #fff !important; color: #000 !important; } .sidebar, .smart-header, .top-bar, .col-action, .footer { display: none !important; }
+            .main-wrapper { margin: 0 !important; width: 100% !important; } .content-area, .app-container { padding: 0 !important; border: none !important; box-shadow: none !important; background: transparent !important; }
             .table-responsive { overflow: visible !important; border: none !important; width: 100% !important; }
             table { width: 100% !important; max-width: 100% !important; min-width: 100% !important; border: 2px solid #000 !important; font-size: 9px !important; table-layout: fixed !important; }
             th, td { border: 1px solid #000 !important; padding: 4px 2px !important; color: #000 !important; word-wrap: break-word !important; overflow-wrap: break-word !important; white-space: normal !important; }
             th { background: #f1f1f1 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; font-size: 9px !important; font-weight: bold !important;}
             .edit-box { border: none !important; background: transparent !important; padding: 0 !important; min-height: auto !important; color: #000 !important; word-break: break-word !important; }
-            
-            /* পার্সেন্টেজ অনুযায়ী কলাম সেট করা হলো যাতে পেজের বাইরে না যায় */
-            .col-date { width: 6% !important; } 
-            .col-time { width: 5% !important; } 
-            .col-sl { width: 4% !important; }
-            .col-nature { width: 16% !important; } 
-            .col-details { width: 15% !important; } 
-            .col-staff-booked { width: 13% !important; }
-            .col-cdate { width: 6% !important; } 
-            .col-work { width: 17% !important; }
-            .col-remarks { width: 11% !important; } 
-            .col-sign { width: 7% !important; } 
+            .col-date { width: 6% !important; } .col-time { width: 5% !important; } .col-sl { width: 4% !important; } .col-nature { width: 16% !important; } .col-details { width: 15% !important; } .col-staff-booked { width: 13% !important; } .col-cdate { width: 6% !important; } .col-work { width: 17% !important; } .col-remarks { width: 11% !important; } .col-sign { width: 7% !important; } 
         }
-
-        @media (max-width: 950px) {
-            .sidebar { transform: translateX(-100%); } .sidebar.active-mobile { transform: translateX(0); }
-            .main-wrapper { margin-left: 0; width: 100%; } .close-sidebar-btn { display: block; }
-        }
+        @media (max-width: 950px) { .sidebar { transform: translateX(-100%); } .sidebar.active-mobile { transform: translateX(0); } .main-wrapper { margin-left: 0; width: 100%; } .close-sidebar-btn { display: block; } }
     </style>
 </head>
 <body>
@@ -194,8 +175,11 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-add" onclick="addRow()">➕ Add Row</button>
-                        <button class="btn btn-save" onclick="saveTableData()">💾 Save Data</button>
+                        <button class="btn btn-login" id="authBtn" onclick="toggleAdminMode()">🔒 Admin Login</button>
+                        
+                        <button class="btn btn-add admin-only" onclick="addRow()">➕ Add Row</button>
+                        <button class="btn btn-save admin-only" onclick="saveTableData()">💾 Save Data</button>
+                        
                         <button class="btn btn-print" onclick="window.print()">🖨️ Print PDF</button>
                     </div>
                 </div>
@@ -214,7 +198,7 @@
                                 <th class="col-work">Work Done</th>
                                 <th class="col-remarks">Remarks & use</th>
                                 <th class="col-sign">Sign of staff</th>
-                                <th class="col-action no-print">Del</th>
+                                <th class="col-action admin-only no-print">Del</th>
                             </tr>
                         </thead>
                         <tbody id="tableBody">
@@ -230,10 +214,43 @@
     </div>
 
     <script>
-        // 1. Google Sheets Web App URL (আপনার দেওয়া লিংক)
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyf_cu2PeJzpK97JA5zKGpqLrfgBXa01SdQNI5zfHvkohnCmBfV9LK5pU7ks8Hkov_p/exec';
+        // 1. Google Sheets Web App URL 
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyktjEJCmhC97wUmy9eOD7anHmsc5c5NWbjaSMu0KYXIj4Izvu0qOgy1zxFrl_p9PcM/exec';
 
-        // 2. Sidebar & Clock Logic
+        // 🟢 আপনার গোপন পিন (PIN) এখানে সেট করা আছে। আপনি চাইলে '1234' পাল্টাতে পারেন।
+        const ADMIN_PIN = "8918";
+        let isAdmin = false;
+
+        // 2. Admin Login Logic
+        function toggleAdminMode() {
+            if(isAdmin) {
+                // Logout Logic
+                isAdmin = false;
+                document.body.classList.remove('admin-mode');
+                document.getElementById('authBtn').innerHTML = '🔒 Admin Login';
+                document.getElementById('authBtn').style.background = 'var(--danger)';
+                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.edit-box').forEach(el => el.setAttribute('contenteditable', 'false'));
+                alert("Logged out successfully. You are now in View Only mode.");
+            } else {
+                // Login Logic
+                let enteredPin = prompt("Enter Admin PIN to edit records:");
+                if(enteredPin === ADMIN_PIN) {
+                    isAdmin = true;
+                    document.body.classList.add('admin-mode');
+                    document.getElementById('authBtn').innerHTML = '🔓 Logout';
+                    document.getElementById('authBtn').style.background = '#059669'; // Green
+                    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block'); // Show buttons
+                    document.querySelectorAll('.col-action').forEach(el => el.style.display = 'table-cell'); // Show del col
+                    document.querySelectorAll('.edit-box').forEach(el => el.setAttribute('contenteditable', 'true'));
+                    alert("Access Granted! You can now Add, Edit, or Delete data.");
+                } else if(enteredPin !== null) {
+                    alert("Incorrect PIN! Access Denied.");
+                }
+            }
+        }
+
+        // 3. Sidebar & Clock Logic
         function toggleSidebar() { if (window.innerWidth <= 950) { document.getElementById('sidebar').classList.toggle('active-mobile'); document.getElementById('sidebarOverlay').classList.toggle('show'); } else { document.getElementById('sidebar').classList.toggle('collapsed'); document.getElementById('mainWrapper').classList.toggle('expanded'); } }
         function closeSidebar() { if (window.innerWidth <= 950) { document.getElementById('sidebar').classList.remove('active-mobile'); document.getElementById('sidebarOverlay').classList.remove('show'); } }
         
@@ -243,7 +260,7 @@
         const themeBtn = document.getElementById('themeToggle'); if(localStorage.getItem('erp-theme') === 'dark') { document.body.classList.add('dark-mode'); if(themeBtn) themeBtn.textContent = '☀️'; }
         function toggleTheme() { document.body.classList.toggle('dark-mode'); if(document.body.classList.contains('dark-mode')) { localStorage.setItem('erp-theme', 'dark'); if(themeBtn) themeBtn.textContent = '☀️'; } else { localStorage.setItem('erp-theme', 'light'); if(themeBtn) themeBtn.textContent = '🌙'; } }
 
-        // 3. Server Logic for Google Sheets
+        // 4. Server Logic for Google Sheets
         window.onload = () => {
             const today = new Date();
             const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -257,15 +274,20 @@
             const tr = document.createElement('tr');
             const columns = ['date', 'time', 'slNo', 'nature', 'details', 'staffBooked', 'cdate', 'work', 'remarks', 'sign'];
             
+            // Contenteditable depend on isAdmin
+            const isEditable = isAdmin ? 'true' : 'false';
+
             columns.forEach(col => {
                 const td = document.createElement('td');
                 const val = data[col] !== undefined ? data[col] : '';
-                td.innerHTML = `<div class="edit-box" contenteditable="true" oninput="markUnsaved()">${val}</div>`;
+                td.innerHTML = `<div class="edit-box" contenteditable="${isEditable}" oninput="markUnsaved()">${val}</div>`;
                 tr.appendChild(td);
             });
 
             const tdAction = document.createElement('td');
-            tdAction.className = "col-action no-print";
+            tdAction.className = "col-action admin-only no-print";
+            // Check if admin is logged in to show delete button initially
+            tdAction.style.display = isAdmin ? 'table-cell' : 'none';
             tdAction.innerHTML = `<button class="del-btn" onclick="deleteRow(this)" title="Delete Row">🗑️</button>`;
             tr.appendChild(tdAction);
             tbody.appendChild(tr);
@@ -323,6 +345,8 @@
         }
 
         async function saveTableData() {
+            if(!isAdmin) { alert("Please login as Admin to save data."); return; }
+
             const saveBtn = document.querySelector('.btn-save');
             saveBtn.innerHTML = '⏳ Saving to Server...';
             saveBtn.disabled = true;
