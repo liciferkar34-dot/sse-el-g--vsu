@@ -1,125 +1,368 @@
-<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Material Stock - Bishnupur Electric (G)</title>
+    <title>Materials Store - VSU Elect(G)</title>
     <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: #f4f7f6; 
-            margin: 0; 
-            padding: 0; 
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+        :root {
+            --bg-gradient: linear-gradient(135deg, #e0eafc, #cfdef3, #e0eafc);
+            --text-main: #1e293b; --text-muted: #475569;
+            --glass-bg: rgba(255, 255, 255, 0.9); --glass-border: rgba(255, 255, 255, 0.6);
+            --accent: #0284c7; --accent-glow: rgba(2, 132, 199, 0.4);
+            --danger: #e11d48; --success: #16a34a;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.08); --sidebar-width: 260px;
+        }
+        body.dark-mode {
+            --bg-gradient: linear-gradient(135deg, #0f172a, #1e293b, #0f172a);
+            --text-main: #f8fafc; --text-muted: #94a3b8;
+            --glass-bg: rgba(30, 41, 59, 0.9); --glass-border: rgba(255, 255, 255, 0.1);
+            --accent: #38bdf8; --shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+        }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; color: var(--text-main); background: var(--bg-gradient); background-size: 200% 200%; animation: gradientMove 15s ease infinite; display: flex; min-height: 100vh; overflow-x: hidden; transition: color 0.3s; }
+        @keyframes gradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        
+        /* Sidebar & Header */
+        .sidebar { width: var(--sidebar-width); background: var(--glass-bg); backdrop-filter: blur(15px); border-right: 1px solid var(--glass-border); position: fixed; top: 0; left: 0; height: 100vh; display: flex; flex-direction: column; box-shadow: var(--shadow); z-index: 2000; transition: transform 0.4s; }
+        .sidebar.collapsed { transform: translateX(-100%); }
+        .sidebar-header { padding: 20px; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; gap: 15px; position: relative;}
+        .sidebar-logo { width: 45px; height: 45px; background: white; border-radius: 8px; padding: 2px; border: 2px solid var(--accent); object-fit: contain; }
+        .sidebar-title h2 { margin: 0; font-size: 16px; color: var(--accent); text-transform: uppercase; font-weight: 800; }
+        .sidebar-title p { margin: 2px 0 0 0; font-size: 11px; color: var(--text-muted); font-weight: bold; }
+        .close-sidebar-btn { display: none; background: transparent; border: none; font-size: 20px; color: var(--text-main); position: absolute; right: 15px; top: 25px; cursor: pointer; }
+        .menu-items { padding: 20px 0; overflow-y: auto; flex-grow: 1; }
+        .menu-link { display: flex; align-items: center; gap: 15px; padding: 12px 25px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 600; transition: 0.3s; border-left: 4px solid transparent; }
+        .menu-link:hover, .menu-link.active { background: rgba(128,128,128,0.1); border-left-color: var(--accent); color: var(--accent); }
+        .menu-icon { font-size: 18px; }
+        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 1999; display: none; opacity: 0; transition: 0.3s; }
+        .sidebar-overlay.show { display: block; opacity: 1; }
+        
+        .main-wrapper { margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); display: flex; flex-direction: column; min-height: 100vh; transition: 0.4s; }
+        .smart-header { background: var(--glass-bg); backdrop-filter: blur(12px); border-bottom: 1px solid var(--glass-border); padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: var(--shadow); }
+        .toggle-btn { background: var(--accent); color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 18px; cursor: pointer; transition: 0.3s; margin-right: 15px;}
+        .header-title { font-size: 18px; font-weight: bold; color: var(--accent); margin: 0; display: inline-block;}
+        .header-right { display: flex; align-items: center; gap: 20px; }
+        .theme-btn { background: rgba(128,128,128,0.1); border: 1px solid var(--glass-border); font-size: 16px; cursor: pointer; padding: 8px; border-radius: 50%; transition: 0.3s; }
+        .clock-widget { text-align: right; }
+        .clock-time { font-size: 16px; font-weight: bold; margin: 0; color: var(--text-main); font-family: monospace;}
+        .clock-date { font-size: 10px; margin: 0; color: var(--text-muted); text-transform: uppercase;}
+        .ir-logo-right { width: 45px; height: 45px; background: white; border-radius: 50%; padding: 3px; border: 2px solid var(--accent); object-fit: contain; }
+        
+        /* Table Layout */
+        .content-area { padding: 25px; flex-grow: 1; width: 100%; box-sizing: border-box; overflow: hidden; }
+        .app-container { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; box-shadow: var(--shadow); padding: 25px; width: 100%; box-sizing: border-box;}
+        body.dark-mode .app-container { background: #1e293b; border-color: #334155; }
+        
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; background: rgba(128,128,128,0.05); padding: 15px; border-radius: 8px; border: 1px solid var(--glass-border);}
+        .filter-group { display: flex; align-items: center; gap: 10px; font-weight: bold; color: var(--text-main);}
+        .filter-group select { padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; color: #0f172a; font-size: 14px; font-weight: bold; outline: none; cursor: pointer;}
+        
+        .btn-group { display: flex; gap: 10px; }
+        .btn { padding: 8px 15px; font-size: 13px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; transition: 0.3s; color: white; display: flex; align-items: center; gap: 5px;}
+        .btn-add { background: var(--accent); } .btn-add:hover { background: #0369a1; }
+        .btn-print { background: #475569; } .btn-print:hover { background: #334155; }
+        .btn-save { background: #f59e0b; color: #000; min-width: 120px; justify-content: center;} .btn-save:hover { background: #d97706; color: #fff;}
+        
+        .table-responsive { width: 100%; overflow-x: auto; border: 2px solid #94a3b8; border-radius: 4px; }
+        table { width: 100%; min-width: 1200px; border-collapse: collapse; font-size: 14px; background: #ffffff; }
+        body.dark-mode table { background: #0f172a; }
+        
+        th, td { padding: 10px; text-align: left; vertical-align: middle; border: 1px solid #94a3b8; color: #000;}
+        body.dark-mode th, body.dark-mode td { border-color: #475569; color: #fff;}
+        th { background: #e2e8f0; color: #0f172a; font-weight: bold; text-align: center; font-size: 13px;}
+        body.dark-mode th { background: #334155; color: #f8fafc; }
+        
+        /* Material Store Specific Column Widths */
+        .col-sl { width: 50px; text-align: center;}
+        .col-material { width: 250px; }
+        .col-unit { width: 80px; text-align: center;}
+        .col-opening { width: 100px; text-align: center;}
+        .col-received { width: 100px; text-align: center;}
+        .col-total { width: 100px; text-align: center; background: rgba(22, 163, 74, 0.1); font-weight: bold;}
+        .col-issued { width: 100px; text-align: center;}
+        .col-balance { width: 120px; text-align: center; background: rgba(2, 132, 199, 0.1); font-weight: bold;}
+        .col-remarks { width: 200px; }
+        .col-action { width: 50px; text-align: center; }
+
+        .edit-box { outline: none; min-height: 25px; width: 100%; line-height: 1.4; padding: 5px; border-radius: 4px; box-sizing: border-box; word-wrap: break-word;}
+        .num-box { text-align: center; font-family: monospace; font-size: 15px;}
+        .auto-calc { background: transparent; border: none; font-weight: bold; text-align: center; width: 100%; pointer-events: none;}
+        
+        @media screen {
+            .edit-box:hover { background-color: #f1f5f9; }
+            body.dark-mode .edit-box:hover { background-color: #334155; }
+            .edit-box:focus { background-color: #fff; border: 2px dashed var(--accent); color: #000; }
         }
         
-        /* Header Design */
-        .ir-header { background-color: #0b3c5d; color: white; padding: 15px 30px; display: flex; align-items: center; border-bottom: 5px solid #d9b310; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
-        .ir-logo { width: 60px; height: 60px; margin-right: 20px; background-color: white; border-radius: 50%; padding: 4px; box-shadow: 0 0 10px rgba(0,0,0,0.3); object-fit: contain; }
-        .ir-titles h1 { margin: 0; font-size: 24px; letter-spacing: 1px; text-transform: uppercase; }
-        .ir-titles p { margin: 5px 0 0 0; font-size: 14px; color: #a8d0e6; font-weight: bold; }
-        
-        /* Message Container */
-        .container { 
-            flex-grow: 1;
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            padding: 20px;
-        }
-        
-        .message-card { 
-            background: white; 
-            width: 100%; 
-            max-width: 500px; 
-            padding: 50px 30px; 
-            border-radius: 15px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
-            border-top: 6px solid #d9b310; 
-            text-align: center;
-            animation: fadeIn 0.5s ease-in-out;
+        .del-btn { background: var(--danger); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold;}
+        .del-btn:hover { opacity: 0.8; }
+        .footer { text-align: center; padding: 20px; background: var(--glass-bg); color: var(--text-muted); font-size: 12px; border-top: 1px solid var(--glass-border); font-weight: bold; }
+
+        /* PDF Print Layout - Landscape Auto Fit */
+        @media print {
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            @page { size: A4 landscape; margin: 10mm; }
+            body { background: #fff !important; color: #000 !important; }
+            .sidebar, .smart-header, .top-bar, .col-action, .footer { display: none !important; }
+            .main-wrapper { margin: 0 !important; width: 100% !important; }
+            .content-area, .app-container { padding: 0 !important; border: none !important; box-shadow: none !important; background: transparent !important; }
+            
+            .table-responsive { overflow: visible !important; border: none !important; width: 100% !important; }
+            table { width: 100% !important; max-width: 100% !important; min-width: 100% !important; border: 2px solid #000 !important; font-size: 10px !important; table-layout: fixed !important; }
+            th, td { border: 1px solid #000 !important; padding: 6px 4px !important; color: #000 !important; word-wrap: break-word !important; }
+            th { background: #f1f1f1 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; font-size: 10px !important; font-weight: bold !important;}
+            .edit-box { border: none !important; background: transparent !important; padding: 0 !important; min-height: auto !important; color: #000 !important; }
+            .col-total, .col-balance { background: #e2e8f0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
+
+            /* Column Percentages for Perfect Print */
+            .col-sl { width: 5% !important; }
+            .col-material { width: 25% !important; }
+            .col-unit { width: 7% !important; }
+            .col-opening { width: 9% !important; }
+            .col-received { width: 9% !important; }
+            .col-total { width: 9% !important; }
+            .col-issued { width: 9% !important; }
+            .col-balance { width: 11% !important; }
+            .col-remarks { width: 16% !important; }
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @media (max-width: 950px) {
+            .sidebar { transform: translateX(-100%); } .sidebar.active-mobile { transform: translateX(0); }
+            .main-wrapper { margin-left: 0; width: 100%; } .close-sidebar-btn { display: block; }
         }
-
-        .icon { 
-            font-size: 80px; 
-            margin-bottom: 20px; 
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-            40% {transform: translateY(-20px);}
-            60% {transform: translateY(-10px);}
-        }
-
-        .message-card h2 { 
-            color: #0b3c5d; 
-            margin: 0 0 15px 0; 
-            font-size: 28px; 
-            text-transform: uppercase; 
-            letter-spacing: 1px;
-        }
-        
-        .message-card p { 
-            font-size: 16px; 
-            color: #555; 
-            line-height: 1.6; 
-            margin-bottom: 30px;
-        }
-        
-        .back-btn { 
-            background: #0b3c5d; 
-            color: white; 
-            padding: 12px 25px; 
-            font-size: 16px; 
-            font-weight: bold; 
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            text-decoration: none; 
-            display: inline-block; 
-            transition: 0.3s;
-            box-shadow: 0 4px 10px rgba(11, 60, 93, 0.3);
-        }
-        .back-btn:hover { 
-            background: #328cc1; 
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(11, 60, 93, 0.4);
-        }
-        
-        /* Footer */
-        .footer { text-align: center; padding: 20px; background-color: #e9ecef; color: #555; font-size: 13px; border-top: 1px solid #ddd; }
     </style>
 </head>
 <body>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
-    <header class="ir-header">
-        <img src="images.jpeg" alt="IR Logo" class="ir-logo">
-        <div class="ir-titles">
-            <h1>Indian Railways</h1>
-            <p>Office of the SSE/Elect(G) | Bishnupur</p>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="vsu_logo.png" alt="VSU Logo" class="sidebar-logo">
+            <div class="sidebar-title">
+                <h2>VSU Elect(G)</h2>
+                <p>Menu Navigation</p>
+            </div>
+            <button class="close-sidebar-btn" onclick="closeSidebar()">✖</button>
         </div>
-    </header>
+        <div class="menu-items">
+            <a href="index.html" class="menu-link"><span class="menu-icon">🏠</span> Dashboard Home</a>
+            <a href="duty_roster.html" class="menu-link"><span class="menu-icon">📅</span> Staff Duty Roster</a>
+            <a href="notifications.html" class="menu-link"><span class="menu-icon">📢</span> Office Notifications</a>
+            <a href="breakdown.html" class="menu-link"><span class="menu-icon">🛠️</span> Breakdown Report</a>
+            <a href="material_stock.html" class="menu-link active"><span class="menu-icon">📦</span> Materials Store</a>
+            <a href="lift_report.html" class="menu-link"><span class="menu-icon">🛗</span> Lift Safety</a>
+            <a href="table5.html" class="menu-link"><span class="menu-icon">⏱️</span> NDA Record (Table 5)</a>
+            <a href="table7.html" class="menu-link"><span class="menu-icon">🚂</span> TA Record (Table 7)</a>
+        </div>
+    </aside>
 
-    <div class="container">
-        <div class="message-card">
-            <div class="icon">🚧</div>
-            <h2>Yet to be Updated!</h2>
-            <p>The <b>Material Stock</b> page is currently under development. We are working on adding new features. Please check back later.</p>
-            <a href="index.html" class="back-btn">⬅️ Back to Home</a>
+    <div class="main-wrapper" id="mainWrapper">
+        <header class="smart-header">
+            <div style="display: flex; align-items: center;">
+                <button class="toggle-btn" onclick="toggleSidebar()" title="Toggle Menu">☰</button>
+                <h3 class="header-title">Materials Stock Register</h3>
+            </div>
+            <div class="header-right">
+                <div class="clock-widget">
+                    <p class="clock-time" id="liveTime">00:00:00</p>
+                    <p class="clock-date" id="liveDate">Loading...</p>
+                </div>
+                <button class="theme-btn" id="themeToggle" onclick="toggleTheme()" title="Switch Theme">🌙</button>
+                <img src="images.jpeg" alt="IR Logo" class="ir-logo-right">
+            </div>
+        </header>
+
+        <div class="content-area">
+            <div class="app-container">
+                
+                <div class="top-bar no-print">
+                    <div class="filter-group">
+                        <label>📦 Record Month:</label>
+                        <select id="filterYear" onchange="loadTableData()">
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                        </select>
+                        <select id="filterMonth" onchange="loadTableData()">
+                            <option value="January">January</option>
+                            <option value="February">February</option>
+                            <option value="March">March</option>
+                            <option value="April">April</option>
+                            <option value="May">May</option>
+                            <option value="June">June</option>
+                            <option value="July">July</option>
+                            <option value="August">August</option>
+                            <option value="September">September</option>
+                            <option value="October">October</option>
+                            <option value="November">November</option>
+                            <option value="December">December</option>
+                        </select>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-add" onclick="addRow()">➕ Add Item</button>
+                        <button class="btn btn-save" onclick="saveTableData()">💾 Save Stock</button>
+                        <button class="btn btn-print" onclick="window.print()">🖨️ Print Report</button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="stockTable">
+                        <thead>
+                            <tr>
+                                <th class="col-sl">Sl No.</th>
+                                <th class="col-material">Material Description / Spec</th>
+                                <th class="col-unit">Unit</th>
+                                <th class="col-opening">Opening Balance</th>
+                                <th class="col-received">Received</th>
+                                <th class="col-total">Total Stock</th>
+                                <th class="col-issued">Issued</th>
+                                <th class="col-balance">Closing Balance</th>
+                                <th class="col-remarks">Remarks (Used At)</th>
+                                <th class="col-action no-print">Del</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            </tbody>
+                    </table>
+                </div>
+
+            </div>
         </div>
+                <footer class="footer">
+            &copy; 2026 Enterprise Portal | Developed for Bishnupur Electric (G), South Eastern Railway.
+        </footer>
     </div>
 
-    <div class="footer">
-        &copy; 2026 Developed for Internal Operations | Bishnupur Electric (G), South Eastern Railway.
-    </div>
+    <script>
+        // Sidebar & Clock
+        function toggleSidebar() { if (window.innerWidth <= 950) { document.getElementById('sidebar').classList.toggle('active-mobile'); document.getElementById('sidebarOverlay').classList.toggle('show'); } else { document.getElementById('sidebar').classList.toggle('collapsed'); document.getElementById('mainWrapper').classList.toggle('expanded'); } }
+        function closeSidebar() { if (window.innerWidth <= 950) { document.getElementById('sidebar').classList.remove('active-mobile'); document.getElementById('sidebarOverlay').classList.remove('show'); } }
+        
+        function updateClock() { const timeEl = document.getElementById('liveTime'); const dateEl = document.getElementById('liveDate'); if(!timeEl || !dateEl) return; const now = new Date(); let hours = now.getHours(), minutes = now.getMinutes(), seconds = now.getSeconds(); let ampm = hours >= 12 ? 'PM' : 'AM'; hours = hours % 12; hours = hours ? hours : 12; minutes = minutes < 10 ? '0' + minutes : minutes; seconds = seconds < 10 ? '0' + seconds : seconds; timeEl.textContent = `${hours}:${minutes}:${seconds} ${ampm}`; const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }; dateEl.textContent = now.toLocaleDateString('en-IN', options); }
+        setInterval(updateClock, 1000); updateClock(); 
 
+        const themeBtn = document.getElementById('themeToggle'); if(localStorage.getItem('erp-theme') === 'dark') { document.body.classList.add('dark-mode'); if(themeBtn) themeBtn.textContent = '☀️'; }
+        function toggleTheme() { document.body.classList.toggle('dark-mode'); if(document.body.classList.contains('dark-mode')) { localStorage.setItem('erp-theme', 'dark'); if(themeBtn) themeBtn.textContent = '☀️'; } else { localStorage.setItem('erp-theme', 'light'); if(themeBtn) themeBtn.textContent = '🌙'; } }
+
+        // Set Current Month
+        const today = new Date();
+        const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+        document.getElementById('filterYear').value = today.getFullYear().toString();
+        document.getElementById('filterMonth').value = months[today.getMonth()];
+
+        // Store Auto-Calculation Logic
+        function addRow(data = {}) {
+            const tbody = document.getElementById('tableBody');
+            const tr = document.createElement('tr');
+            
+            // Generate Cells
+            tr.innerHTML = `
+                <td><div class="edit-box num-box" contenteditable="true" oninput="markUnsaved()">${data.sl || ''}</div></td>
+                <td><div class="edit-box" contenteditable="true" oninput="markUnsaved()">${data.material || ''}</div></td>
+                <td><div class="edit-box num-box" contenteditable="true" oninput="markUnsaved()">${data.unit || ''}</div></td>
+                <td><div class="edit-box num-box" contenteditable="true" oninput="calculateStock(this)">${data.opening || ''}</div></td>
+                <td><div class="edit-box num-box" contenteditable="true" oninput="calculateStock(this)">${data.received || ''}</div></td>
+                <td class="col-total"><div class="auto-calc">${data.total || ''}</div></td>
+                <td><div class="edit-box num-box" contenteditable="true" oninput="calculateStock(this)">${data.issued || ''}</div></td>
+                <td class="col-balance"><div class="auto-calc">${data.balance || ''}</div></td>
+                <td><div class="edit-box" contenteditable="true" oninput="markUnsaved()">${data.remarks || ''}</div></td>
+                <td class="col-action no-print"><button class="del-btn" onclick="deleteRow(this)" title="Delete Row">🗑️</button></td>
+            `;
+            tbody.appendChild(tr);
+        }
+
+        // The Magic Formula
+        function calculateStock(element) {
+            let row = element.parentElement.parentElement;
+            
+            // Get values (If empty, treat as 0)
+            let opening = parseFloat(row.cells[3].innerText) || 0;
+            let received = parseFloat(row.cells[4].innerText) || 0;
+            let issued = parseFloat(row.cells[6].innerText) || 0;
+            
+            // The Target Cells
+            let totalCell = row.cells[5].querySelector('.auto-calc');
+            let balanceCell = row.cells[7].querySelector('.auto-calc');
+
+            // Calculation
+            let totalStock = opening + received;
+            let currentBalance = totalStock - issued;
+
+            // Update UI
+            if(opening === 0 && received === 0 && issued === 0) {
+                totalCell.innerText = '';
+                balanceCell.innerText = '';
+            } else {
+                totalCell.innerText = totalStock;
+                balanceCell.innerText = currentBalance;
+            }
+            
+            markUnsaved();
+        }
+
+        function markUnsaved() {
+            const saveBtn = document.querySelector('.btn-save');
+            saveBtn.innerHTML = '💾 Save Stock*';
+            saveBtn.style.background = '#eab308'; 
+        }
+
+        function deleteRow(btn) {
+            if(confirm("Remove this item from the list?")) {
+                btn.parentElement.parentElement.remove();
+                saveTableData();
+            }
+        }
+
+        // Saving to Local Storage (Currently fast offline mode)
+        function saveTableData() {
+            const year = document.getElementById('filterYear').value;
+            const month = document.getElementById('filterMonth').value;
+            const storageKey = `materialStockData_${year}_${month}`;
+
+            const tbody = document.getElementById('tableBody');
+            const rows = tbody.getElementsByTagName('tr');
+            const tableData = [];
+
+            for (let i = 0; i < rows.length; i++) {
+                tableData.push({
+                    sl: rows[i].cells[0].innerText,
+                    material: rows[i].cells[1].innerText,
+                    unit: rows[i].cells[2].innerText,
+                    opening: rows[i].cells[3].innerText,
+                    received: rows[i].cells[4].innerText,
+                    total: rows[i].cells[5].innerText,
+                    issued: rows[i].cells[6].innerText,
+                    balance: rows[i].cells[7].innerText,
+                    remarks: rows[i].cells[8].innerText
+                });
+            }
+            
+            localStorage.setItem(storageKey, JSON.stringify(tableData));
+            
+            const saveBtn = document.querySelector('.btn-save');
+            saveBtn.innerHTML = '✅ Saved!';
+            saveBtn.style.background = 'var(--success)';
+            saveBtn.style.color = 'white';
+            setTimeout(() => { saveBtn.innerHTML = '💾 Save Stock'; saveBtn.style.background = '#f59e0b'; saveBtn.style.color = '#000'; }, 2000);
+        }
+
+        function loadTableData() {
+            const year = document.getElementById('filterYear').value;
+            const month = document.getElementById('filterMonth').value;
+            const storageKey = `materialStockData_${year}_${month}`;
+
+            const savedData = JSON.parse(localStorage.getItem(storageKey));
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = ''; 
+
+            if (savedData && savedData.length > 0) {
+                savedData.forEach(rowData => addRow(rowData));
+            } else {
+                for(let i=0; i<10; i++) addRow(); // Load 10 blank rows for items
+            }
+        }
+
+        window.onload = loadTableData;
+    </script>
 </body>
 </html>
