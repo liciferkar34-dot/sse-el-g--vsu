@@ -53,6 +53,9 @@
         .app-container { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; box-shadow: var(--shadow); padding: 25px; width: 100%; box-sizing: border-box;}
         body.dark-mode .app-container { background: #1e293b; border-color: #334155; }
         
+        /* Print Only Header */
+        .print-only-header { display: none; }
+        
         /* Fund Summary Cards */
         .fund-summary { display: flex; gap: 20px; margin-bottom: 25px; flex-wrap: wrap; }
         .summary-card { flex: 1; min-width: 200px; padding: 20px; border-radius: 12px; color: white; display: flex; align-items: center; gap: 15px; box-shadow: var(--shadow); }
@@ -77,30 +80,36 @@
         
         .admin-only { display: none; }
         
-        /* Table Layout */
-        .table-responsive { width: 100%; overflow-x: auto; border: 2px solid #94a3b8; border-radius: 4px; }
-        table { width: 100%; min-width: 1100px; border-collapse: collapse; font-size: 14px; background: #ffffff; }
+        /* Table Layouts */
+        .table-section-title { font-size: 18px; font-weight: bold; margin: 30px 0 10px 0; color: var(--text-main); display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--glass-border); padding-bottom: 10px; }
+        .title-income { color: #059669; }
+        .title-expense { color: #e11d48; }
+
+        .table-responsive { width: 100%; overflow-x: auto; border: 2px solid #94a3b8; border-radius: 4px; margin-bottom: 15px;}
+        table { width: 100%; min-width: 900px; border-collapse: collapse; font-size: 14px; background: #ffffff; }
         body.dark-mode table { background: #0f172a; }
         
         th, td { padding: 10px; text-align: left; vertical-align: middle; border: 1px solid #94a3b8; color: #000;}
         body.dark-mode th, body.dark-mode td { border-color: #475569; color: #fff;}
-        th { background: #e2e8f0; color: #0f172a; font-weight: bold; text-align: center; font-size: 13px;}
-        body.dark-mode th { background: #334155; color: #f8fafc; }
+        th { font-weight: bold; text-align: center; font-size: 13px;}
         
+        .th-income { background: #d1fae5; color: #064e3b; }
+        .th-expense { background: #ffe4e6; color: #881337; }
+        body.dark-mode .th-income { background: #064e3b; color: #d1fae5; }
+        body.dark-mode .th-expense { background: #881337; color: #ffe4e6; }
+        
+        /* Columns */
         .col-sl { width: 50px; text-align: center;}
         .col-date { width: 100px; text-align: center;}
         .col-particulars { width: 300px; }
-        .col-bill { width: 100px; text-align: center;}
-        .col-income { width: 120px; text-align: right; background: rgba(16, 185, 129, 0.1); font-weight: bold; color: #059669;}
-        .col-expense { width: 120px; text-align: right; background: rgba(244, 63, 94, 0.1); font-weight: bold; color: #e11d48;}
-        .col-balance { width: 120px; text-align: right; background: #e2e8f0; font-weight: bold;}
-        body.dark-mode .col-balance { background: #334155; }
-        .col-remarks { width: 150px; }
+        .col-bill { width: 120px; text-align: center;}
+        .col-amount { width: 130px; text-align: right; font-weight: bold;}
+        .col-remarks { width: 200px; }
         .col-action { width: 50px; text-align: center; }
 
         .edit-box { outline: none; min-height: 25px; width: 100%; line-height: 1.4; padding: 5px; border-radius: 4px; box-sizing: border-box; word-wrap: break-word;}
-        .num-box { text-align: right; font-family: monospace; font-size: 16px;}
-        .auto-calc { text-align: right; font-family: monospace; font-size: 16px; font-weight: bold; width: 100%; padding: 5px;}
+        .num-box { text-align: right; font-family: monospace; font-size: 16px; color: #000;}
+        body.dark-mode .num-box { color: #fff; }
         
         body.admin-mode .edit-box:hover { background-color: #f1f5f9; }
         body.admin-mode.dark-mode .edit-box:hover { background-color: #334155; }
@@ -114,32 +123,47 @@
            ========================================= */
         @media print {
             * { margin: 0; padding: 0; box-sizing: border-box; } 
-            @page { size: A4 landscape; margin: 8mm; }
+            @page { size: A4 portrait; margin: 10mm; }
             body { background: #fff !important; color: #000 !important; } 
-            .sidebar, .smart-header, .top-bar, .col-action, .footer { display: none !important; }
+            .sidebar, .smart-header, .top-bar, .col-action, .footer, .btn-add { display: none !important; }
             .main-wrapper { margin: 0 !important; width: 100% !important; } 
             .content-area, .app-container { padding: 0 !important; border: none !important; box-shadow: none !important; background: transparent !important; }
-            .fund-summary { margin-bottom: 15px !important; } 
-            .summary-card { padding: 10px !important; } 
-            .summary-details h2 { font-size: 18px !important; }
+            
+            /* Print Header with Office Name & Category */
+            .print-only-header { display: block !important; text-align: center !important; margin-bottom: 20px !important; border-bottom: 2px solid #000 !important; padding-bottom: 10px !important;}
+            .print-only-header h1 { margin: 0 !important; font-size: 24px !important; color: #000 !important; text-transform: uppercase !important; text-decoration: underline !important;}
+            .print-only-header h2 { margin: 5px 0 0 0 !important; font-size: 18px !important; color: #333 !important; }
+            
+            /* Fund Summary - Print Friendly */
+            .fund-summary { margin-bottom: 20px !important; display: flex !important; width: 100% !important; gap: 10px !important;} 
+            .summary-card { padding: 10px !important; flex: 1 !important; border: 1px solid #000 !important; border-radius: 5px !important; justify-content: center !important;} 
+            .summary-card.card-income { background: #d1fae5 !important; color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
+            .summary-card.card-expense { background: #ffe4e6 !important; color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
+            .summary-card.card-balance { background: #dbeafe !important; color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
+            .summary-icon { display: none !important; }
+            .summary-details h4 { font-size: 12px !important; text-align: center !important;}
+            .summary-details h2 { font-size: 16px !important; margin: 0 !important; text-align: center !important;}
+            
+            .table-section-title { font-size: 14px !important; margin: 15px 0 5px 0 !important; border-bottom: 1px solid #000 !important; }
             
             /* টেবিল ফিট করার লজিক */
-            .table-responsive { overflow: visible !important; border: none !important; width: 100% !important; }
-            table { width: 100% !important; max-width: 100% !important; min-width: 100% !important; border: 2px solid #000 !important; font-size: 10px !important; table-layout: fixed !important; }
-            th, td { border: 1px solid #000 !important; padding: 4px 2px !important; color: #000 !important; word-wrap: break-word !important; overflow-wrap: break-word !important; white-space: normal !important; }
-            th { background: #f1f1f1 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; font-size: 10px !important;}
-            .col-income { color: #059669 !important; } .col-expense { color: #e11d48 !important; }
+            .table-responsive { overflow: visible !important; border: none !important; width: 100% !important; margin-bottom: 20px !important; }
+            table { width: 100% !important; max-width: 100% !important; min-width: 100% !important; border: 2px solid #000 !important; font-size: 11px !important; table-layout: fixed !important; }
+            th, td { border: 1px solid #000 !important; padding: 4px 3px !important; color: #000 !important; word-wrap: break-word !important; overflow-wrap: break-word !important; white-space: normal !important; }
+            th { font-size: 11px !important; font-weight: bold !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            
+            .th-income { background: #d1fae5 !important; }
+            .th-expense { background: #ffe4e6 !important; }
+            
             .edit-box { border: none !important; background: transparent !important; padding: 0 !important; color: #000 !important; word-break: break-word !important; }
             
-            /* পার্সেন্টেজ অনুযায়ী কলাম সেট করা হলো যাতে পেজের বাইরে না যায় */
-            .col-sl { width: 5% !important; } 
-            .col-date { width: 9% !important; } 
-            .col-particulars { width: 28% !important; } 
-            .col-bill { width: 9% !important; } 
-            .col-income { width: 12% !important; } 
-            .col-expense { width: 12% !important; } 
-            .col-balance { width: 12% !important; } 
-            .col-remarks { width: 13% !important; }
+            /* ১০০% পারফেক্ট কলাম পার্সেন্টেজ */
+            .col-sl { width: 6% !important; } 
+            .col-date { width: 12% !important; } 
+            .col-particulars { width: 33% !important; } 
+            .col-bill { width: 14% !important; } 
+            .col-amount { width: 15% !important; text-align: right !important;} 
+            .col-remarks { width: 20% !important; }
         }
         @media (max-width: 950px) { .sidebar { transform: translateX(-100%); } .sidebar.active-mobile { transform: translateX(0); } .main-wrapper { margin-left: 0; width: 100%; } .close-sidebar-btn { display: block; } }
     </style>
@@ -185,25 +209,30 @@
 
         <div class="content-area">
             
+            <div class="print-only-header">
+                <h1>Office of the SSE / EL / VSU</h1>
+                <h2 id="printCategoryTitle">General Office Fund Account</h2>
+            </div>
+
             <div class="fund-summary">
                 <div class="summary-card card-income">
                     <div class="summary-icon">📥</div>
                     <div class="summary-details">
-                        <h4>Total Collection / Income</h4>
+                        <h4>Total Income / Collection</h4>
                         <h2 id="sumIncome">₹ 0.00</h2>
                     </div>
                 </div>
                 <div class="summary-card card-expense">
                     <div class="summary-icon">📤</div>
                     <div class="summary-details">
-                        <h4>Total Payment / Expense</h4>
+                        <h4>Total Expense / Payment</h4>
                         <h2 id="sumExpense">₹ 0.00</h2>
                     </div>
                 </div>
                 <div class="summary-card card-balance">
                     <div class="summary-icon">🏦</div>
                     <div class="summary-details">
-                        <h4>Net Balance (Available)</h4>
+                        <h4>Net Available Balance</h4>
                         <h2 id="sumBalance">₹ 0.00</h2>
                     </div>
                 </div>
@@ -213,13 +242,14 @@
                 
                 <div class="top-bar no-print">
                     <div class="filter-group">
-                        <label>📂 Select Fund Category:</label>
-                        <select id="filterCategory" onchange="loadTableData()">
+                        <label>📂 Category:</label>
+                        <select id="filterCategory" onchange="updatePrintTitle(); loadTableData();">
                             <option value="General_Fund">General Office Fund</option>
                             <option value="Vishwakarma_Puja">Vishwakarma Puja Fund</option>
                             <option value="Staff_Feast">Staff Feast / Picnic</option>
                             <option value="Farewell">Staff Farewell Fund</option>
                             <option value="Contractor_Inv">Contractor Investment</option>
+                            <option value="Others">Others Fund / Misc.</option>
                         </select>
                         <select id="filterYear" onchange="loadTableData()">
                             <option value="2026">2026</option>
@@ -229,29 +259,68 @@
 
                     <div class="btn-group">
                         <button class="btn btn-login" id="authBtn" onclick="toggleAdminMode()">🔒 Admin Login</button>
-                        <button class="btn btn-add admin-only" onclick="addRow()">➕ Add Record</button>
                         <button class="btn btn-save admin-only" onclick="saveTableData()">💾 Save Accounts</button>
                         <button class="btn btn-print" onclick="window.print()">🖨️ Print Statement</button>
                     </div>
                 </div>
 
+                <div class="table-section-title title-income">
+                    <span>📥 Part A: Income / Collection Details</span>
+                    <button class="btn btn-add admin-only" style="background:#059669;" onclick="addIncomeRow()">➕ Add Income</button>
+                </div>
                 <div class="table-responsive">
-                    <table id="fundTable">
+                    <table id="incomeTable">
                         <thead>
                             <tr>
-                                <th class="col-sl">Sl.</th>
-                                <th class="col-date">Date</th>
-                                <th class="col-particulars">Particulars / Description</th>
-                                <th class="col-bill">Bill/Voucher No</th>
-                                <th class="col-income">Income/Collection (₹) [+]</th>
-                                <th class="col-expense">Payment/Expense (₹) [-]</th>
-                                <th class="col-balance">Balance (₹)</th>
-                                <th class="col-remarks">Remarks/Sign</th>
-                                <th class="col-action admin-only no-print">Del</th>
+                                <th class="col-sl th-income">Sl.</th>
+                                <th class="col-date th-income">Date</th>
+                                <th class="col-particulars th-income">Particulars / Source of Income</th>
+                                <th class="col-bill th-income">Receipt No.</th>
+                                <th class="col-amount th-income">Amount (₹) [+]</th>
+                                <th class="col-remarks th-income">Remarks / Sign</th>
+                                <th class="col-action admin-only no-print th-income">Del</th>
                             </tr>
                         </thead>
-                        <tbody id="tableBody">
+                        <tbody id="incomeBody">
                             </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="4" style="text-align: right; font-weight: bold; font-size: 15px;">Total Income (₹):</th>
+                                <th id="bottomTotalIncome" style="text-align: right; font-weight: bold; font-size: 16px; color: #059669; font-family: monospace;">0.00</th>
+                                <th></th>
+                                <th class="col-action admin-only no-print"></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="table-section-title title-expense">
+                    <span>📤 Part B: Expenditure / Payment Details</span>
+                    <button class="btn btn-add admin-only" style="background:#e11d48;" onclick="addExpenseRow()">➕ Add Expense</button>
+                </div>
+                <div class="table-responsive">
+                    <table id="expenseTable">
+                        <thead>
+                            <tr>
+                                <th class="col-sl th-expense">Sl.</th>
+                                <th class="col-date th-expense">Date</th>
+                                <th class="col-particulars th-expense">Particulars / Details of Expense</th>
+                                <th class="col-bill th-expense">Bill / Voucher No.</th>
+                                <th class="col-amount th-expense">Amount (₹) [-]</th>
+                                <th class="col-remarks th-expense">Remarks / Sign</th>
+                                <th class="col-action admin-only no-print th-expense">Del</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expenseBody">
+                            </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="4" style="text-align: right; font-weight: bold; font-size: 15px;">Total Expenditure (₹):</th>
+                                <th id="bottomTotalExpense" style="text-align: right; font-weight: bold; font-size: 16px; color: #e11d48; font-family: monospace;">0.00</th>
+                                <th></th>
+                                <th class="col-action admin-only no-print"></th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
 
@@ -263,7 +332,7 @@
     </div>
 
     <script>
-        const ADMIN_PIN = "8918";
+        const ADMIN_PIN = "1234";
         let isAdmin = false;
 
         function toggleAdminMode() {
@@ -296,11 +365,24 @@
         const themeBtn=document.getElementById('themeToggle');if(localStorage.getItem('erp-theme')==='dark'){document.body.classList.add('dark-mode');if(themeBtn)themeBtn.textContent='☀️';}
         function toggleTheme(){document.body.classList.toggle('dark-mode');if(document.body.classList.contains('dark-mode')){localStorage.setItem('erp-theme','dark');if(themeBtn)themeBtn.textContent='☀️';}else{localStorage.setItem('erp-theme','light');if(themeBtn)themeBtn.textContent='🌙';}}
 
-        // Setup Filter
-        window.onload = () => { document.getElementById('filterYear').value = new Date().getFullYear().toString(); loadTableData(); };
+        // Print Header Auto-Update Logic
+        function updatePrintTitle() {
+            const selectElement = document.getElementById('filterCategory');
+            const selectedText = selectElement.options[selectElement.selectedIndex].text;
+            const year = document.getElementById('filterYear').value;
+            document.getElementById('printCategoryTitle').innerText = selectedText + " - Account Statement (" + year + ")";
+        }
 
-        function addRow(data = {}) {
-            const tbody = document.getElementById('tableBody');
+        // Setup Init
+        window.onload = () => { 
+            document.getElementById('filterYear').value = new Date().getFullYear().toString(); 
+            updatePrintTitle();
+            loadTableData(); 
+        };
+
+        // ADD INCOME ROW
+        function addIncomeRow(data = {}) {
+            const tbody = document.getElementById('incomeBody');
             const tr = document.createElement('tr');
             const isEdit = isAdmin ? 'true' : 'false';
             
@@ -309,9 +391,26 @@
                 <td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${data.date || ''}</div></td>
                 <td><div class="edit-box" contenteditable="${isEdit}">${data.particulars || ''}</div></td>
                 <td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${data.bill || ''}</div></td>
-                <td class="col-income"><div class="edit-box num-box inc-val" contenteditable="${isEdit}" oninput="calculateFund()">${data.income || ''}</div></td>
-                <td class="col-expense"><div class="edit-box num-box exp-val" contenteditable="${isEdit}" oninput="calculateFund()">${data.expense || ''}</div></td>
-                <td class="col-balance"><div class="auto-calc bal-val">${data.balance || ''}</div></td>
+                <td><div class="edit-box num-box inc-val" contenteditable="${isEdit}" oninput="calculateFund()">${data.amount || ''}</div></td>
+                <td><div class="edit-box" contenteditable="${isEdit}">${data.remarks || ''}</div></td>
+                <td class="col-action admin-only no-print" style="display:${isAdmin?'table-cell':'none'}"><button class="del-btn" onclick="deleteRow(this)">🗑️</button></td>
+            `;
+            tbody.appendChild(tr);
+            calculateFund();
+        }
+
+        // ADD EXPENSE ROW
+        function addExpenseRow(data = {}) {
+            const tbody = document.getElementById('expenseBody');
+            const tr = document.createElement('tr');
+            const isEdit = isAdmin ? 'true' : 'false';
+            
+            tr.innerHTML = `
+                <td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${data.sl || ''}</div></td>
+                <td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${data.date || ''}</div></td>
+                <td><div class="edit-box" contenteditable="${isEdit}">${data.particulars || ''}</div></td>
+                <td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${data.bill || ''}</div></td>
+                <td><div class="edit-box num-box exp-val" contenteditable="${isEdit}" oninput="calculateFund()">${data.amount || ''}</div></td>
                 <td><div class="edit-box" contenteditable="${isEdit}">${data.remarks || ''}</div></td>
                 <td class="col-action admin-only no-print" style="display:${isAdmin?'table-cell':'none'}"><button class="del-btn" onclick="deleteRow(this)">🗑️</button></td>
             `;
@@ -321,40 +420,34 @@
 
         function deleteRow(btn) { if(confirm("Delete this record?")) { btn.parentElement.parentElement.remove(); calculateFund(); } }
 
+        // CALCULATE TOTALS (Dashboard + Bottom Rows)
         function calculateFund() {
-            const tbody = document.getElementById('tableBody');
-            const rows = tbody.getElementsByTagName('tr');
-            let runningBalance = 0;
             let totalIncome = 0;
             let totalExpense = 0;
 
-            for (let i = 0; i < rows.length; i++) {
-                let incStr = rows[i].querySelector('.inc-val').innerText.replace(/,/g, '');
-                let expStr = rows[i].querySelector('.exp-val').innerText.replace(/,/g, '');
-                
-                let income = parseFloat(incStr) || 0;
-                let expense = parseFloat(expStr) || 0;
-                
-                runningBalance += (income - expense);
-                totalIncome += income;
-                totalExpense += expense;
-                
-                // Set Row Balance
-                let balCell = rows[i].querySelector('.bal-val');
-                if(income === 0 && expense === 0 && i > 0) {
-                    balCell.innerText = runningBalance.toFixed(2);
-                } else if(income === 0 && expense === 0 && i === 0) {
-                    balCell.innerText = '';
-                } else {
-                    balCell.innerText = runningBalance.toFixed(2);
-                }
-            }
+            // Calc Income
+            document.querySelectorAll('.inc-val').forEach(cell => {
+                let val = parseFloat(cell.innerText.replace(/,/g, '')) || 0;
+                totalIncome += val;
+            });
 
-            // Update Dashboard
+            // Calc Expense
+            document.querySelectorAll('.exp-val').forEach(cell => {
+                let val = parseFloat(cell.innerText.replace(/,/g, '')) || 0;
+                totalExpense += val;
+            });
+
+            let runningBalance = totalIncome - totalExpense;
+
+            // Update Top Dashboard
             document.getElementById('sumIncome').innerText = "₹ " + totalIncome.toFixed(2);
             document.getElementById('sumExpense').innerText = "₹ " + totalExpense.toFixed(2);
             document.getElementById('sumBalance').innerText = "₹ " + runningBalance.toFixed(2);
             
+            // Update Bottom Table Totals
+            document.getElementById('bottomTotalIncome').innerText = totalIncome.toFixed(2);
+            document.getElementById('bottomTotalExpense').innerText = totalExpense.toFixed(2);
+
             if(isAdmin) {
                 const saveBtn = document.querySelector('.btn-save');
                 if(saveBtn.innerText === '💾 Save Accounts') { saveBtn.innerText = '💾 Save Accounts*'; saveBtn.style.background = '#eab308'; }
@@ -365,24 +458,33 @@
             if(!isAdmin) return;
             const category = document.getElementById('filterCategory').value;
             const year = document.getElementById('filterYear').value;
-            const storageKey = `officeFundData_${category}_${year}`;
+            const storageKey = `officeFund_v3_${category}_${year}`;
 
-            const tbody = document.getElementById('tableBody');
-            const rows = tbody.getElementsByTagName('tr');
-            const tableData = [];
+            const fundData = { income: [], expense: [] };
 
-            for (let i = 0; i < rows.length; i++) {
-                tableData.push({
-                    sl: rows[i].cells[0].innerText, date: rows[i].cells[1].innerText,
-                    particulars: rows[i].cells[2].innerText, bill: rows[i].cells[3].innerText,
-                    income: rows[i].querySelector('.inc-val').innerText,
-                    expense: rows[i].querySelector('.exp-val').innerText,
-                    balance: rows[i].querySelector('.bal-val').innerText,
-                    remarks: rows[i].cells[7].innerText
+            // Save Income
+            const incRows = document.getElementById('incomeBody').getElementsByTagName('tr');
+            for (let i = 0; i < incRows.length; i++) {
+                fundData.income.push({
+                    sl: incRows[i].cells[0].innerText, date: incRows[i].cells[1].innerText,
+                    particulars: incRows[i].cells[2].innerText, bill: incRows[i].cells[3].innerText,
+                    amount: incRows[i].querySelector('.inc-val').innerText,
+                    remarks: incRows[i].cells[5].innerText
+                });
+            }
+
+            // Save Expense
+            const expRows = document.getElementById('expenseBody').getElementsByTagName('tr');
+            for (let i = 0; i < expRows.length; i++) {
+                fundData.expense.push({
+                    sl: expRows[i].cells[0].innerText, date: expRows[i].cells[1].innerText,
+                    particulars: expRows[i].cells[2].innerText, bill: expRows[i].cells[3].innerText,
+                    amount: expRows[i].querySelector('.exp-val').innerText,
+                    remarks: expRows[i].cells[5].innerText
                 });
             }
             
-            localStorage.setItem(storageKey, JSON.stringify(tableData));
+            localStorage.setItem(storageKey, JSON.stringify(fundData));
             const saveBtn = document.querySelector('.btn-save');
             saveBtn.innerHTML = '✅ Saved!'; saveBtn.style.background = 'var(--success)'; saveBtn.style.color = 'white';
             setTimeout(() => { saveBtn.innerHTML = '💾 Save Accounts'; saveBtn.style.background = '#f59e0b'; saveBtn.style.color = '#000'; }, 2000);
@@ -391,16 +493,24 @@
         function loadTableData() {
             const category = document.getElementById('filterCategory').value;
             const year = document.getElementById('filterYear').value;
-            const storageKey = `officeFundData_${category}_${year}`;
+            const storageKey = `officeFund_v3_${category}_${year}`;
 
             const savedData = JSON.parse(localStorage.getItem(storageKey));
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = ''; 
+            
+            document.getElementById('incomeBody').innerHTML = ''; 
+            document.getElementById('expenseBody').innerHTML = ''; 
 
-            if (savedData && savedData.length > 0) {
-                savedData.forEach(rowData => addRow(rowData));
+            if (savedData) {
+                if(savedData.income && savedData.income.length > 0) {
+                    savedData.income.forEach(row => addIncomeRow(row));
+                } else { for(let i=0; i<3; i++) addIncomeRow(); }
+
+                if(savedData.expense && savedData.expense.length > 0) {
+                    savedData.expense.forEach(row => addExpenseRow(row));
+                } else { for(let i=0; i<3; i++) addExpenseRow(); }
             } else {
-                for(let i=0; i<8; i++) addRow();
+                for(let i=0; i<3; i++) addIncomeRow();
+                for(let i=0; i<3; i++) addExpenseRow();
             }
             calculateFund();
         }
