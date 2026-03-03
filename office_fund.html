@@ -257,9 +257,13 @@
         </footer>
     </div>
 <script>
-        const ADMIN_PIN = "1234";
+        // 🟢 এখানে আপনার Office Fund এর নতুন Deploy করা লিংকটি বসান:
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw3bQAfpudkt4jHrJku-hITj2q0-xELq8BMmTv3qzjMAvMJnQOr_EYJ91jNmbKb_FtB/exec'; 
+
+        const ADMIN_PIN = "8918";
         let isAdmin = false;
         const allCategoriesList = ["General_Fund", "Vishwakarma_Puja", "Staff_Feast", "Farewell", "Contractor_Inv", "Others"];
+        let serverDataCache = []; // To store data from Google Sheets
 
         function toggleAdminMode() {
             if(isAdmin) {
@@ -289,6 +293,7 @@
             }
         }
 
+        // Clock & Sidebar
         function toggleSidebar() { if(window.innerWidth<=950){document.getElementById('sidebar').classList.toggle('active-mobile');document.getElementById('sidebarOverlay').classList.toggle('show');}else{document.getElementById('sidebar').classList.toggle('collapsed');document.getElementById('mainWrapper').classList.toggle('expanded');} }
         function closeSidebar() { if(window.innerWidth<=950){document.getElementById('sidebar').classList.remove('active-mobile');document.getElementById('sidebarOverlay').classList.remove('show');} }
         function updateClock() { const timeEl=document.getElementById('liveTime'),dateEl=document.getElementById('liveDate');if(!timeEl||!dateEl)return;const now=new Date();let h=now.getHours(),m=now.getMinutes(),s=now.getSeconds();h=h<10?'0'+h:h;m=m<10?'0'+m:m;s=s<10?'0'+s:s;timeEl.textContent=`${h}:${m}:${s}`;dateEl.textContent=now.toLocaleDateString('en-IN',{weekday:'short',year:'numeric',month:'short',day:'numeric'}); }
@@ -296,7 +301,10 @@
         const themeBtn=document.getElementById('themeToggle');if(localStorage.getItem('erp-theme')==='dark'){document.body.classList.add('dark-mode');if(themeBtn)themeBtn.textContent='☀️';}
         function toggleTheme(){document.body.classList.toggle('dark-mode');if(document.body.classList.contains('dark-mode')){localStorage.setItem('erp-theme','dark');if(themeBtn)themeBtn.textContent='☀️';}else{localStorage.setItem('erp-theme','light');if(themeBtn)themeBtn.textContent='🌙';}}
 
-        window.onload = () => { document.getElementById('filterYear').value = new Date().getFullYear().toString(); loadTableData(); };
+        window.onload = () => { 
+            document.getElementById('filterYear').value = new Date().getFullYear().toString(); 
+            fetchDataFromServer(); 
+        };
 
         function markUnsaved() {
             if(!isAdmin) return;
@@ -304,7 +312,6 @@
             if(saveBtn.innerText === '💾 Save Accounts') { saveBtn.innerText = '💾 Save Accounts*'; saveBtn.style.background = '#eab308'; }
         }
 
-        // HTML Generator for a Single Section (Ledger Block)
         function getLedgerHTML(ledger, isReadOnly) {
             const isEdit = (!isReadOnly && isAdmin) ? 'true' : 'false';
             const displayAdmin = (!isReadOnly && isAdmin) ? 'inline-block' : 'none';
@@ -313,86 +320,39 @@
 
             let incomeHTML = '';
             ledger.income.forEach(row => {
-                incomeHTML += `<tr>
-                    <td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.sl || ''}</div></td>
-                    <td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.date || ''}</div></td>
-                    <td><div class="edit-box" contenteditable="${isEdit}">${row.particulars || ''}</div></td>
-                    <td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.bill || ''}</div></td>
-                    <td><div class="edit-box num-box inc-val" contenteditable="${isEdit}" oninput="calculateFund()" style="color:#059669;">${row.amount || ''}</div></td>
-                    <td><div class="edit-box" contenteditable="${isEdit}">${row.remarks || ''}</div></td>
-                    <td class="col-action admin-only no-print" style="display:${displayDelCell}"><button class="del-btn" onclick="deleteRow(this)">🗑️</button></td>
-                </tr>`;
+                incomeHTML += `<tr><td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.sl || ''}</div></td><td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.date || ''}</div></td><td><div class="edit-box" contenteditable="${isEdit}">${row.particulars || ''}</div></td><td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.bill || ''}</div></td><td><div class="edit-box num-box inc-val" contenteditable="${isEdit}" oninput="calculateFund()" style="color:#059669;">${row.amount || ''}</div></td><td><div class="edit-box" contenteditable="${isEdit}">${row.remarks || ''}</div></td><td class="col-action admin-only no-print" style="display:${displayDelCell}"><button class="del-btn" onclick="deleteRow(this)">🗑️</button></td></tr>`;
             });
 
             let expenseHTML = '';
             ledger.expense.forEach(row => {
-                expenseHTML += `<tr>
-                    <td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.sl || ''}</div></td>
-                    <td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.date || ''}</div></td>
-                    <td><div class="edit-box" contenteditable="${isEdit}">${row.particulars || ''}</div></td>
-                    <td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.bill || ''}</div></td>
-                    <td><div class="edit-box num-box exp-val" contenteditable="${isEdit}" oninput="calculateFund()" style="color:#e11d48;">${row.amount || ''}</div></td>
-                    <td><div class="edit-box" contenteditable="${isEdit}">${row.remarks || ''}</div></td>
-                    <td class="col-action admin-only no-print" style="display:${displayDelCell}"><button class="del-btn" onclick="deleteRow(this)">🗑️</button></td>
-                </tr>`;
+                expenseHTML += `<tr><td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.sl || ''}</div></td><td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.date || ''}</div></td><td><div class="edit-box" contenteditable="${isEdit}">${row.particulars || ''}</div></td><td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.bill || ''}</div></td><td><div class="edit-box num-box exp-val" contenteditable="${isEdit}" oninput="calculateFund()" style="color:#e11d48;">${row.amount || ''}</div></td><td><div class="edit-box" contenteditable="${isEdit}">${row.remarks || ''}</div></td><td class="col-action admin-only no-print" style="display:${displayDelCell}"><button class="del-btn" onclick="deleteRow(this)">🗑️</button></td></tr>`;
             });
 
-            // 🟢 Update: headline is now empty by default, and placeholder handles the faded text
             return `
             <div class="ledger-section">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <input type="text" class="ledger-headline-input" value="${ledger.headline || ''}" ${readOnlyAttr} placeholder="Enter Title (e.g., Saraswati Puja 2026)..." oninput="markUnsaved()">
                     <button class="del-btn admin-only no-print" style="display:${displayAdmin}; background:var(--danger);" onclick="deleteSection(this)">🗑️ Delete Section</button>
                 </div>
-
-                <div class="table-section-title title-income">
-                    <span>📥 Part A: Income / Collection</span>
-                    <button class="btn btn-add admin-only no-print" style="background:#059669; display:${displayAdmin};" onclick="addNewIncomeRow(this)">➕ Add Income</button>
-                </div>
-                <div class="table-responsive">
-                    <table class="income-table">
-                        <thead><tr><th class="col-sl th-income">Sl.</th><th class="col-date th-income">Date</th><th class="col-particulars th-income">Particulars</th><th class="col-bill th-income">Receipt No.</th><th class="col-amount th-income">Amount [+]</th><th class="col-remarks th-income">Remarks</th><th class="col-action admin-only no-print th-income" style="display:${displayDelCell}">Del</th></tr></thead>
-                        <tbody class="income-body">${incomeHTML}</tbody>
-                        <tfoot><tr><th colspan="4" style="text-align: right;">Sub-Total Income (₹):</th><th class="sec-inc-total" style="text-align: right; color: #059669; font-size:15px; font-family:monospace;">0.00</th><th></th><th class="col-action admin-only no-print" style="display:${displayDelCell}"></th></tr></tfoot>
-                    </table>
-                </div>
-
-                <div class="table-section-title title-expense">
-                    <span>📤 Part B: Expenditure / Payment</span>
-                    <button class="btn btn-add admin-only no-print" style="background:#e11d48; display:${displayAdmin};" onclick="addNewExpenseRow(this)">➕ Add Expense</button>
-                </div>
-                <div class="table-responsive">
-                    <table class="expense-table">
-                        <thead><tr><th class="col-sl th-expense">Sl.</th><th class="col-date th-expense">Date</th><th class="col-particulars th-expense">Particulars</th><th class="col-bill th-expense">Voucher No.</th><th class="col-amount th-expense">Amount [-]</th><th class="col-remarks th-expense">Remarks</th><th class="col-action admin-only no-print th-expense" style="display:${displayDelCell}">Del</th></tr></thead>
-                        <tbody class="expense-body">${expenseHTML}</tbody>
-                        <tfoot><tr><th colspan="4" style="text-align: right;">Sub-Total Expense (₹):</th><th class="sec-exp-total" style="text-align: right; color: #e11d48; font-size:15px; font-family:monospace;">0.00</th><th></th><th class="col-action admin-only no-print" style="display:${displayDelCell}"></th></tr></tfoot>
-                    </table>
-                </div>
+                <div class="table-section-title title-income"><span>📥 Part A: Income / Collection</span><button class="btn btn-add admin-only no-print" style="background:#059669; display:${displayAdmin};" onclick="addNewIncomeRow(this)">➕ Add Income</button></div>
+                <div class="table-responsive"><table class="income-table"><thead><tr><th class="col-sl th-income">Sl.</th><th class="col-date th-income">Date</th><th class="col-particulars th-income">Particulars</th><th class="col-bill th-income">Receipt No.</th><th class="col-amount th-income">Amount [+]</th><th class="col-remarks th-income">Remarks</th><th class="col-action admin-only no-print th-income" style="display:${displayDelCell}">Del</th></tr></thead><tbody class="income-body">${incomeHTML}</tbody><tfoot><tr><th colspan="4" style="text-align: right;">Sub-Total Income (₹):</th><th class="sec-inc-total" style="text-align: right; color: #059669; font-size:15px; font-family:monospace;">0.00</th><th></th><th class="col-action admin-only no-print" style="display:${displayDelCell}"></th></tr></tfoot></table></div>
+                <div class="table-section-title title-expense"><span>📤 Part B: Expenditure / Payment</span><button class="btn btn-add admin-only no-print" style="background:#e11d48; display:${displayAdmin};" onclick="addNewExpenseRow(this)">➕ Add Expense</button></div>
+                <div class="table-responsive"><table class="expense-table"><thead><tr><th class="col-sl th-expense">Sl.</th><th class="col-date th-expense">Date</th><th class="col-particulars th-expense">Particulars</th><th class="col-bill th-expense">Voucher No.</th><th class="col-amount th-expense">Amount [-]</th><th class="col-remarks th-expense">Remarks</th><th class="col-action admin-only no-print th-expense" style="display:${displayDelCell}">Del</th></tr></thead><tbody class="expense-body">${expenseHTML}</tbody><tfoot><tr><th colspan="4" style="text-align: right;">Sub-Total Expense (₹):</th><th class="sec-exp-total" style="text-align: right; color: #e11d48; font-size:15px; font-family:monospace;">0.00</th><th></th><th class="col-action admin-only no-print" style="display:${displayDelCell}"></th></tr></tfoot></table></div>
             </div>`;
         }
 
         function getEmptyRowHTML(isIncome) {
             const colorClass = isIncome ? 'inc-val' : 'exp-val';
             const colorCode = isIncome ? '#059669' : '#e11d48';
-            return `<tr>
-                <td><div class="edit-box" contenteditable="true" style="text-align:center;"></div></td>
-                <td><div class="edit-box" contenteditable="true" style="text-align:center;"></div></td>
-                <td><div class="edit-box" contenteditable="true"></div></td>
-                <td><div class="edit-box" contenteditable="true" style="text-align:center;"></div></td>
-                <td><div class="edit-box num-box ${colorClass}" contenteditable="true" oninput="calculateFund()" style="color:${colorCode};"></div></td>
-                <td><div class="edit-box" contenteditable="true"></div></td>
-                <td class="col-action admin-only no-print" style="display:table-cell"><button class="del-btn" onclick="deleteRow(this)">🗑️</button></td>
-            </tr>`;
+            return `<tr><td><div class="edit-box" contenteditable="true" style="text-align:center;"></div></td><td><div class="edit-box" contenteditable="true" style="text-align:center;"></div></td><td><div class="edit-box" contenteditable="true"></div></td><td><div class="edit-box" contenteditable="true" style="text-align:center;"></div></td><td><div class="edit-box num-box ${colorClass}" contenteditable="true" oninput="calculateFund()" style="color:${colorCode};"></div></td><td><div class="edit-box" contenteditable="true"></div></td><td class="col-action admin-only no-print" style="display:table-cell"><button class="del-btn" onclick="deleteRow(this)">🗑️</button></td></tr>`;
         }
         function addNewIncomeRow(btn) { btn.parentElement.nextElementSibling.querySelector('tbody').insertAdjacentHTML('beforeend', getEmptyRowHTML(true)); markUnsaved(); }
         function addNewExpenseRow(btn) { btn.parentElement.nextElementSibling.querySelector('tbody').insertAdjacentHTML('beforeend', getEmptyRowHTML(false)); markUnsaved(); }
-        
         function deleteRow(btn) { if(confirm("Delete this record?")) { btn.parentElement.parentElement.remove(); calculateFund(); markUnsaved(); } }
         function deleteSection(btn) { if(confirm("WARNING: Delete this entire section with all its records?")) { btn.closest('.ledger-section').remove(); calculateFund(); markUnsaved(); } }
 
         function createNewSection() {
             const container = document.getElementById('ledgersContainer');
-            // 🟢 Update: headline empty by default
             const newLedger = { headline: "", income: [{},{},{}], expense: [{},{},{}] };
             container.insertAdjacentHTML('beforeend', getLedgerHTML(newLedger, false));
             calculateFund(); markUnsaved();
@@ -408,21 +368,93 @@
                 sec.querySelector('.sec-exp-total').innerText = secExp.toFixed(2);
                 grandIncome += secInc; grandExpense += secExp;
             });
-
             document.getElementById('sumIncome').innerText = "₹ " + grandIncome.toFixed(2);
             document.getElementById('sumExpense').innerText = "₹ " + grandExpense.toFixed(2);
             document.getElementById('sumBalance').innerText = "₹ " + (grandIncome - grandExpense).toFixed(2);
         }
 
-        function saveTableData() {
+        // 🟢 Google Sheets Fetch & Save Logic
+        async function fetchDataFromServer() {
+            const container = document.getElementById('ledgersContainer');
+            container.innerHTML = '<h3 style="text-align:center; color:var(--accent); padding:30px;">⏳ Fetching records from server...</h3>';
+            try {
+                const response = await fetch(SCRIPT_URL + "?t=" + new Date().getTime(), { method: 'GET', redirect: 'follow' });
+                serverDataCache = await response.json(); 
+                renderCategoryView();
+            } catch (error) {
+                container.innerHTML = '<h3 style="text-align:center; color:red; padding:30px;">❌ Failed to connect. Showing local offline data (if any).</h3>';
+                renderCategoryView(); // Fallback to local if fetch fails
+            }
+        }
+
+        function categoryChanged() { renderCategoryView(); }
+
+        function renderCategoryView() {
+            const container = document.getElementById('ledgersContainer');
+            container.innerHTML = ''; 
+            const category = document.getElementById('filterCategory').value;
+            const year = document.getElementById('filterYear').value;
+            const selText = document.getElementById('filterCategory').options[document.getElementById('filterCategory').selectedIndex].text;
+
+            // Helper to find data in Server Cache or LocalStorage fallback
+            function getCatData(catStr, yrStr) {
+                let parsedData = null;
+                if(serverDataCache.length > 0) {
+                    for(let i = 1; i < serverDataCache.length; i++) {
+                        if(serverDataCache[i][0] == yrStr && serverDataCache[i][1] == catStr) {
+                            try { parsedData = JSON.parse(serverDataCache[i][2]); } catch(e){}
+                            break;
+                        }
+                    }
+                }
+                if(!parsedData) { parsedData = JSON.parse(localStorage.getItem(`officeFund_v6_${catStr}_${yrStr}`)) || []; }
+                return parsedData;
+            }
+
+            if(category === 'All') {
+                document.getElementById('saveBtnUI').style.display = 'none';
+                document.getElementById('addSecBtn').style.display = 'none';
+                document.getElementById('printCategoryTitle').innerText = "Consolidated Accounts Overview (" + year + ")";
+                
+                let hasData = false;
+                allCategoriesList.forEach(cat => {
+                    let catData = getCatData(cat, year);
+                    if(catData.length > 0) {
+                        hasData = true;
+                        let catTitle = document.createElement('div');
+                        catTitle.className = "cat-title-separator";
+                        catTitle.innerText = "📁 Category: " + cat.replace('_', ' ');
+                        container.appendChild(catTitle);
+                        catData.forEach(ledger => { container.insertAdjacentHTML('beforeend', getLedgerHTML(ledger, true)); });
+                    }
+                });
+                if(!hasData) container.innerHTML = '<h3 style="text-align:center; color:var(--text-muted); margin-top:30px;">No records found for any category in ' + year + '.</h3>';
+            } else {
+                document.getElementById('printCategoryTitle').innerText = selText + " (" + year + ")";
+                if(isAdmin) { document.getElementById('saveBtnUI').style.display = 'inline-block'; document.getElementById('addSecBtn').style.display = 'inline-block'; }
+                else { document.getElementById('addSecBtn').style.display = 'none'; }
+
+                let catData = getCatData(category, year);
+                if(catData.length === 0) {
+                    catData.push({ headline: "", income: [{},{},{}], expense: [{},{},{}] });
+                }
+                catData.forEach(ledger => { container.insertAdjacentHTML('beforeend', getLedgerHTML(ledger, false)); });
+            }
+            calculateFund();
+        }
+
+        async function saveTableData() {
             if(!isAdmin) return;
             const category = document.getElementById('filterCategory').value;
             if(category === 'All') return; 
             
+            const saveBtn = document.querySelector('.btn-save');
+            saveBtn.innerHTML = '⏳ Saving to Server...';
+            saveBtn.disabled = true;
+
             const year = document.getElementById('filterYear').value;
-            const storageKey = `officeFund_v6_${category}_${year}`;
-            
             let allLedgersData = [];
+            
             document.querySelectorAll('.ledger-section').forEach(sec => {
                 let headline = sec.querySelector('.ledger-headline-input').value;
                 let incRows = []; let expRows = [];
@@ -442,55 +474,42 @@
                         expRows.push({ sl: tr.cells[0].innerText, date: tr.cells[1].innerText, particulars: part, bill: tr.cells[3].innerText, amount: amount, remarks: tr.cells[5].innerText });
                     }
                 });
-                
                 allLedgersData.push({ headline: headline, income: incRows, expense: expRows });
             });
 
-            localStorage.setItem(storageKey, JSON.stringify(allLedgersData));
-            const saveBtn = document.querySelector('.btn-save');
-            saveBtn.innerHTML = '✅ Saved!'; saveBtn.style.background = 'var(--success)'; saveBtn.style.color = 'white';
-            setTimeout(() => { saveBtn.innerHTML = '💾 Save Accounts'; saveBtn.style.background = '#f59e0b'; saveBtn.style.color = '#000'; }, 2000);
-        }
+            // Save to LocalStorage as Backup
+            localStorage.setItem(`officeFund_v6_${category}_${year}`, JSON.stringify(allLedgersData));
 
-        function loadTableData() {
-            const container = document.getElementById('ledgersContainer');
-            container.innerHTML = ''; 
-            const category = document.getElementById('filterCategory').value;
-            const year = document.getElementById('filterYear').value;
-            const selText = document.getElementById('filterCategory').options[document.getElementById('filterCategory').selectedIndex].text;
-
-            if(category === 'All') {
-                document.getElementById('saveBtnUI').style.display = 'none';
-                document.getElementById('addSecBtn').style.display = 'none';
-                document.getElementById('printCategoryTitle').innerText = "Consolidated Accounts Overview (" + year + ")";
-                
-                let hasData = false;
-                allCategoriesList.forEach(cat => {
-                    let catData = JSON.parse(localStorage.getItem(`officeFund_v6_${cat}_${year}`)) || [];
-                    if(catData.length > 0) {
-                        hasData = true;
-                        let catTitle = document.createElement('div');
-                        catTitle.className = "cat-title-separator";
-                        catTitle.innerText = "📁 Category: " + cat.replace('_', ' ');
-                        container.appendChild(catTitle);
-                        catData.forEach(ledger => { container.insertAdjacentHTML('beforeend', getLedgerHTML(ledger, true)); });
-                    }
+            // Save to Google Sheets
+            let payload = { year: year, category: category, fundData: JSON.stringify(allLedgersData) };
+            
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload),
+                    redirect: 'follow'
                 });
-                if(!hasData) container.innerHTML = '<h3 style="text-align:center; color:var(--text-muted); margin-top:30px;">No records found for any category in ' + year + '.</h3>';
-            } else {
-                document.getElementById('printCategoryTitle').innerText = selText + " (" + year + ")";
-                if(isAdmin) { document.getElementById('saveBtnUI').style.display = 'inline-block'; document.getElementById('addSecBtn').style.display = 'inline-block'; }
-                else { document.getElementById('addSecBtn').style.display = 'none'; }
-
-                let catData = JSON.parse(localStorage.getItem(`officeFund_v6_${category}_${year}`)) || [];
-                if(catData.length === 0) {
-                    // 🟢 Update: headline empty by default for new load
-                    catData.push({ headline: "", income: [{},{},{}], expense: [{},{},{}] });
-                }
-                catData.forEach(ledger => { container.insertAdjacentHTML('beforeend', getLedgerHTML(ledger, false)); });
+                saveBtn.innerHTML = '✅ Saved Successfully!';
+                saveBtn.style.background = 'var(--success)';
+                saveBtn.style.color = 'white';
+                
+                // Refresh server cache
+                fetchDataFromServer();
+            } catch (error) {
+                saveBtn.innerHTML = '❌ Server Error (Saved Locally)';
+                alert("Could not reach Google Sheets. Data saved locally to your device.");
             }
-            calculateFund();
+            
+            setTimeout(() => { 
+                saveBtn.innerHTML = '💾 Save Accounts'; 
+                saveBtn.style.background = '#f59e0b';
+                saveBtn.style.color = '#000';
+                saveBtn.disabled = false; 
+            }, 3000);
         }
     </script>
+</body>
+</html>
 </body>
 </html>
