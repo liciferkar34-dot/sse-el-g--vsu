@@ -21,6 +21,7 @@
         }
         body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; color: var(--text-main); background: var(--bg-gradient); background-size: 200% 200%; display: flex; min-height: 100vh; overflow-x: hidden; transition: color 0.3s; }
         
+        /* Sidebar & Header */
         .sidebar { width: var(--sidebar-width); background: var(--glass-bg); backdrop-filter: blur(15px); border-right: 1px solid var(--glass-border); position: fixed; top: 0; left: 0; height: 100vh; display: flex; flex-direction: column; box-shadow: var(--shadow); z-index: 2000; transition: transform 0.4s; }
         .sidebar.collapsed { transform: translateX(-100%); }
         .sidebar-header { padding: 20px; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; gap: 15px; position: relative;}
@@ -43,6 +44,8 @@
         .clock-widget { text-align: right; }
         .clock-time { font-size: 16px; font-weight: bold; margin: 0; color: var(--text-main); font-family: monospace;}
         .clock-date { font-size: 10px; margin: 0; color: var(--text-muted); text-transform: uppercase;}
+        
+        /* 🟢 Logo Size Fixed */
         .ir-logo-right { width: 45px; height: 45px; background: white; border-radius: 50%; padding: 3px; border: 2px solid var(--accent); object-fit: contain; }
         
         .content-area { padding: 25px; flex-grow: 1; width: 100%; box-sizing: border-box; overflow: hidden; }
@@ -61,7 +64,7 @@
 
         .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; background: rgba(128,128,128,0.05); padding: 15px; border-radius: 8px; border: 1px solid var(--glass-border);}
         .filter-group { display: flex; align-items: center; gap: 10px; font-weight: bold; color: var(--text-main); flex-wrap: wrap;}
-        .filter-group select { padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; color: #0f172a; font-size: 14px; font-weight: bold; outline: none; cursor: pointer;}
+        .filter-group select { padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; color: #0f172a; font-size: 14px; font-weight: bold; outline: none;}
         
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap;}
         .btn { padding: 8px 15px; font-size: 13px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; transition: 0.3s; color: white; display: flex; align-items: center; gap: 5px;}
@@ -110,7 +113,6 @@
             * { margin: 0; padding: 0; box-sizing: border-box; } 
             @page { size: A4 landscape; margin: 10mm; }
             
-            /* Overriding all hidden overflows to prevent page cut-offs */
             html, body { background: #fff !important; color: #000 !important; overflow: visible !important; height: auto !important; display: block !important; }
             
             .sidebar, .smart-header, .top-bar, .col-action, .footer, .btn-add, .del-btn, .no-print { display: none !important; }
@@ -131,14 +133,12 @@
             .summary-details h4 { font-size: 12px !important; text-align: center !important;}
             .summary-details h2 { font-size: 16px !important; margin: 0 !important; text-align: center !important;}
             
-            /* Section page breaks handled */
             #ledgersContainer { display: block !important; overflow: visible !important; }
             .ledger-section { background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin-bottom: 30px !important; display: block !important; page-break-inside: auto !important;}
             .ledger-headline-input { border: none !important; font-size: 16px !important; color: #000 !important; font-weight: bold !important; margin-bottom: 5px !important; background: #e2e8f0 !important; padding: 5px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
             .cat-title-separator { font-size: 18px !important; color: #000 !important; border-bottom: 2px solid #000 !important; margin-top: 20px !important; page-break-after: avoid;}
             .table-section-title { font-size: 12px !important; margin: 10px 0 2px 0 !important; border: none !important; page-break-after: avoid;}
             
-            /* Table Break Logic */
             .table-responsive { overflow: visible !important; border: none !important; width: 100% !important; margin-bottom: 10px !important; display: block !important; }
             table { width: 100% !important; max-width: 100% !important; min-width: 100% !important; border: 2px solid #000 !important; font-size: 11px !important; table-layout: fixed !important; display: table !important; page-break-inside: auto !important; }
             thead { display: table-header-group !important; }
@@ -150,14 +150,12 @@
             .th-income { background: #d1fae5 !important; } .th-expense { background: #ffe4e6 !important; }
             .edit-box { border: none !important; background: transparent !important; padding: 0 !important; color: #000 !important; word-break: break-word !important; }
             
-            /* Column Widths */
             .col-sl { width: 5% !important; } .col-date { width: 10% !important; } .col-particulars { width: 35% !important; } 
             .col-bill { width: 15% !important; } .col-amount { width: 15% !important; text-align: right !important;} .col-remarks { width: 20% !important; }
         }
         @media (max-width: 950px) { .sidebar { transform: translateX(-100%); } .sidebar.active-mobile { transform: translateX(0); } .main-wrapper { margin-left: 0; width: 100%; } .close-sidebar-btn { display: block; } }
     </style>
-</head>
-<body>
+</head><body>
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
     <aside class="sidebar" id="sidebar">
@@ -177,6 +175,8 @@
             <a href="breakdown.html" class="menu-link"><span class="menu-icon">🛠️</span> Breakdown Report</a>
             <a href="material_stock.html" class="menu-link"><span class="menu-icon">📦</span> Materials Store</a>
             <a href="lift_report.html" class="menu-link"><span class="menu-icon">🛗</span> Lift Safety</a>
+            <a href="table5.html" class="menu-link"><span class="menu-icon">⏱️</span> NDA Record (Table 5)</a>
+            <a href="table7.html" class="menu-link"><span class="menu-icon">🚂</span> TA Record (Table 7)</a>
         </div>
     </aside>
 
@@ -248,9 +248,7 @@
                     <div class="btn-group">
                         <button class="btn btn-login" id="authBtn" onclick="toggleAdminMode()">🔒 Admin Login</button>
                         <button class="btn btn-add admin-only" id="addSecBtn" onclick="createNewSection()" style="background:#0284c7;">➕ Add New Section</button>
-                        
                         <button class="btn admin-only" id="clearCatBtn" onclick="clearCategoryData()" style="background:var(--danger);">🗑️ Clear Category</button>
-                        
                         <button class="btn btn-save admin-only" id="saveBtnUI" onclick="saveTableData()">💾 Save Accounts</button>
                         <button class="btn btn-print" onclick="window.print()">🖨️ Print Statement</button>
                     </div>
@@ -260,14 +258,9 @@
                     </div>
 
             </div>
-        </div><footer class="footer">
-            &copy; 2026 Enterprise Portal | Developed for Bishnupur Electric (G), South Eastern Railway.
-        </footer>
-    </div>
-
-    <script>
-        // 🟢 আপনার Office Fund এর গুগল শিট লিংকটি এখানে বসান:
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw3bQAfpudkt4jHrJku-hITj2q0-xELq8BMmTv3qzjMAvMJnQOr_EYJ91jNmbKb_FtB/exec'; 
+        </div><script>
+        // 🟢 আপনার Office Fund এর নতুন গুগল শিট লিংক
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyZ7SJXWMFnxFH1kS028qwmBuD5jVSL-kv-iJtIXXJvj-6lVaNpVGZWYY0xtIoz6IHE/exec'; 
 
         const ADMIN_PIN = "8918";
         let isAdmin = false;
@@ -289,7 +282,6 @@
                     isAdmin = true; document.body.classList.add('admin-mode');
                     document.getElementById('authBtn').innerHTML = '🔓 Logout';
                     document.getElementById('authBtn').style.background = '#059669';
-                    
                     const cat = document.getElementById('filterCategory').value;
                     if(cat !== 'All') {
                         document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
@@ -313,11 +305,8 @@
             const yearSelect = document.getElementById('filterYear');
             yearSelect.innerHTML = '';
             const currY = new Date().getFullYear();
-            for(let y = 2000; y <= currY + 5; y++) {
-                yearSelect.innerHTML += `<option value="${y}">${y}</option>`;
-            }
+            for(let y = 2000; y <= currY + 5; y++) { yearSelect.innerHTML += `<option value="${y}">${y}</option>`; }
             yearSelect.value = currY.toString(); 
-            
             fetchDataFromServer(); 
         };
 
@@ -329,18 +318,10 @@
 
         function updateSerialNumbers() {
             document.querySelectorAll('.ledger-section').forEach(sec => {
-                sec.querySelectorAll('.income-body tr').forEach((row, index) => {
-                    let slCell = row.querySelector('.auto-sl');
-                    if(slCell) slCell.innerText = index + 1;
-                });
-                sec.querySelectorAll('.expense-body tr').forEach((row, index) => {
-                    let slCell = row.querySelector('.auto-sl');
-                    if(slCell) slCell.innerText = index + 1;
-                });
+                sec.querySelectorAll('.income-body tr').forEach((row, index) => { let slCell = row.querySelector('.auto-sl'); if(slCell) slCell.innerText = index + 1; });
+                sec.querySelectorAll('.expense-body tr').forEach((row, index) => { let slCell = row.querySelector('.auto-sl'); if(slCell) slCell.innerText = index + 1; });
             });
-        }
-
-        function getLedgerHTML(ledger, isReadOnly) {
+        }function getLedgerHTML(ledger, isReadOnly) {
             const isEdit = (!isReadOnly && isAdmin) ? 'true' : 'false';
             const displayAdmin = (!isReadOnly && isAdmin) ? 'inline-block' : 'none';
             const displayDelCell = (!isReadOnly && isAdmin) ? 'table-cell' : 'none';
@@ -367,35 +348,31 @@
                 <div class="table-section-title title-expense"><span>📤 Part B: Expenditure / Payment</span><button class="btn btn-add admin-only no-print" style="background:#e11d48; display:${displayAdmin};" onclick="addNewExpenseRow(this)">➕ Add Expense</button></div>
                 <div class="table-responsive"><table class="expense-table"><thead><tr><th class="col-sl th-expense">Sl.</th><th class="col-date th-expense">Date</th><th class="col-particulars th-expense">Particulars</th><th class="col-bill th-expense">Voucher No.</th><th class="col-amount th-expense">Amount [-]</th><th class="col-remarks th-expense">Remarks</th><th class="col-action admin-only no-print th-expense" style="display:${displayDelCell}">Del</th></tr></thead><tbody class="expense-body">${expenseHTML}</tbody><tfoot><tr><th colspan="4" style="text-align: right;">Sub-Total Expense (₹):</th><th class="sec-exp-total" style="text-align: right; color: #e11d48; font-size:15px; font-family:monospace;">0.00</th><th></th><th class="col-action admin-only no-print" style="display:${displayDelCell}"></th></tr></tfoot></table></div>
             </div>`;
-        }function getEmptyRowHTML(isIncome) {
+        }
+
+        function getEmptyRowHTML(isIncome) {
             const colorClass = isIncome ? 'inc-val' : 'exp-val';
             const colorCode = isIncome ? '#059669' : '#e11d48';
             return `<tr><td><div class="edit-box auto-sl" contenteditable="false" style="text-align:center; font-weight:bold; pointer-events:none;"></div></td><td><div class="edit-box" contenteditable="true" style="text-align:center;"></div></td><td><div class="edit-box" contenteditable="true"></div></td><td><div class="edit-box" contenteditable="true" style="text-align:center;"></div></td><td><div class="edit-box num-box ${colorClass}" contenteditable="true" oninput="calculateFund()" style="color:${colorCode};"></div></td><td><div class="edit-box" contenteditable="true"></div></td><td class="col-action admin-only no-print" style="display:table-cell"><button class="del-btn" onclick="deleteRow(this)">🗑️</button></td></tr>`;
-        }
-        
-        function addNewIncomeRow(btn) { btn.parentElement.nextElementSibling.querySelector('tbody').insertAdjacentHTML('beforeend', getEmptyRowHTML(true)); updateSerialNumbers(); markUnsaved(); }
+        }function addNewIncomeRow(btn) { btn.parentElement.nextElementSibling.querySelector('tbody').insertAdjacentHTML('beforeend', getEmptyRowHTML(true)); updateSerialNumbers(); markUnsaved(); }
         function addNewExpenseRow(btn) { btn.parentElement.nextElementSibling.querySelector('tbody').insertAdjacentHTML('beforeend', getEmptyRowHTML(false)); updateSerialNumbers(); markUnsaved(); }
         
         function deleteRow(btn) { if(confirm("Delete this record?")) { btn.parentElement.parentElement.remove(); calculateFund(); updateSerialNumbers(); markUnsaved(); } }
         function deleteSection(btn) { if(confirm("WARNING: Delete this entire section with all its records? Click 'Save Accounts' afterwards to update server.")) { btn.closest('.ledger-section').remove(); calculateFund(); updateSerialNumbers(); markUnsaved(); } }
 
-        // 🟢 NEW: Clear Entire Category Logic
         function clearCategoryData() {
             if(!isAdmin) return;
             if(confirm("🚨 CRITICAL WARNING: Are you sure you want to permanently DELETE ALL DATA for this category in the selected year?")) {
                 document.getElementById('ledgersContainer').innerHTML = '';
                 calculateFund();
-                saveTableData(); // Automatically sync empty state to server
+                saveTableData(); 
             }
         }
 
         function createNewSection() {
             const container = document.getElementById('ledgersContainer');
             const newLedger = { headline: "", income: [{},{},{}], expense: [{},{},{}] };
-            
-            // Remove 'No data' message if exists
             if(container.querySelector('.no-data-msg')) container.innerHTML = '';
-            
             container.insertAdjacentHTML('beforeend', getLedgerHTML(newLedger, false));
             calculateFund(); updateSerialNumbers(); markUnsaved();
         }
@@ -413,15 +390,14 @@
             document.getElementById('sumIncome').innerText = "₹ " + grandIncome.toFixed(2);
             document.getElementById('sumExpense').innerText = "₹ " + grandExpense.toFixed(2);
             document.getElementById('sumBalance').innerText = "₹ " + (grandIncome - grandExpense).toFixed(2);
-        }
-
-        async function fetchDataFromServer() {
+        }async function fetchDataFromServer() {
             const container = document.getElementById('ledgersContainer');
             container.innerHTML = '<h3 style="text-align:center; color:var(--accent); padding:30px;">⏳ Fetching live data from server...</h3>';
             try {
                 const response = await fetch(SCRIPT_URL + "?t=" + new Date().getTime(), { method: 'GET', redirect: 'follow' });
-                if(response.ok) { serverDataCache = await response.json(); }
-            } catch (error) { console.error("Fetch Error:", error); }
+                const textData = await response.text(); 
+                try { serverDataCache = JSON.parse(textData); } catch(e) { serverDataCache = []; }
+            } catch (error) { serverDataCache = []; }
             renderCategoryView(); 
         }
 
@@ -435,7 +411,7 @@
             function getCatData(catStr, yrStr) {
                 let parsedData = null;
                 if(serverDataCache && serverDataCache.length > 0) {
-                    for(let i = 1; i < serverDataCache.length; i++) {
+                    for(let i = 0; i < serverDataCache.length; i++) {
                         if(serverDataCache[i][0] == yrStr && serverDataCache[i][1] == catStr) {
                             try { parsedData = JSON.parse(serverDataCache[i][2]); } catch(e){}
                             break;
@@ -455,7 +431,7 @@
                 let hasData = false;
                 allCategoriesList.forEach(cat => {
                     let catData = getCatData(cat, year);
-                    if(catData.length > 0) {
+                    if(catData && catData.length > 0) {
                         hasData = true;
                         let catTitle = document.createElement('div');
                         catTitle.className = "cat-title-separator";
@@ -478,7 +454,6 @@
 
                 let catData = getCatData(category, year);
                 
-                // 🟢 FIX: Do NOT auto-generate blank section if empty. Show message instead.
                 if(catData.length === 0) {
                     container.innerHTML = `<div class="no-data-msg" style="text-align:center; padding: 40px; border: 2px dashed var(--glass-border); border-radius: 10px; margin-top: 20px;">
                         <h3 style="color:var(--text-muted); margin-bottom: 10px;">No Data Found in ${year}</h3>
@@ -488,8 +463,7 @@
                     catData.forEach(ledger => { container.insertAdjacentHTML('beforeend', getLedgerHTML(ledger, false)); });
                 }
             }
-            calculateFund();
-            updateSerialNumbers();
+            calculateFund(); updateSerialNumbers();
         }
 
         async function saveTableData() {
@@ -498,7 +472,7 @@
             if(category === 'All') return; 
             
             const saveBtn = document.querySelector('.btn-save');
-            saveBtn.innerHTML = '⏳ Saving to Server...';
+            saveBtn.innerHTML = '⏳ Saving...';
             saveBtn.disabled = true;
 
             const year = document.getElementById('filterYear').value;
@@ -507,7 +481,6 @@
             document.querySelectorAll('.ledger-section').forEach(sec => {
                 let headline = sec.querySelector('.ledger-headline-input').value;
                 let incRows = []; let expRows = [];
-                
                 sec.querySelector('.income-body').querySelectorAll('tr').forEach(tr => {
                     let amount = tr.querySelector('.inc-val').innerText.trim();
                     let part = tr.cells[2].innerText.trim();
@@ -515,7 +488,6 @@
                         incRows.push({ sl: tr.cells[0].innerText, date: tr.cells[1].innerText, particulars: part, bill: tr.cells[3].innerText, amount: amount, remarks: tr.cells[5].innerText });
                     }
                 });
-                
                 sec.querySelector('.expense-body').querySelectorAll('tr').forEach(tr => {
                     let amount = tr.querySelector('.exp-val').innerText.trim();
                     let part = tr.cells[2].innerText.trim();
@@ -527,32 +499,17 @@
             });
 
             localStorage.setItem(`officeFund_v6_${category}_${year}`, JSON.stringify(allLedgersData));
-
             let payload = { year: year, category: category, fundData: JSON.stringify(allLedgersData) };
             
             try {
-                await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify(payload),
-                    redirect: 'follow'
-                });
-                saveBtn.innerHTML = '✅ Saved Successfully!';
-                saveBtn.style.background = 'var(--success)';
-                saveBtn.style.color = 'white';
-                
+                await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload), redirect: 'follow' });
+                saveBtn.innerHTML = '✅ Saved!'; saveBtn.style.background = 'var(--success)'; saveBtn.style.color = 'white';
                 fetchDataFromServer();
             } catch (error) {
-                saveBtn.innerHTML = '❌ Server Error (Saved Locally)';
-                alert("Could not reach Google Sheets. Data saved locally to your device.");
+                saveBtn.innerHTML = '❌ Saved Locally';
             }
             
-            setTimeout(() => { 
-                saveBtn.innerHTML = '💾 Save Accounts'; 
-                saveBtn.style.background = '#f59e0b';
-                saveBtn.style.color = '#000';
-                saveBtn.disabled = false; 
-            }, 3000);
+            setTimeout(() => { saveBtn.innerHTML = '💾 Save Accounts'; saveBtn.style.background = '#f59e0b'; saveBtn.style.color = '#000'; saveBtn.disabled = false; }, 3000);
         }
     </script>
 </body>
