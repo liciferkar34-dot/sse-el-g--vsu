@@ -44,8 +44,6 @@
         .clock-widget { text-align: right; }
         .clock-time { font-size: 16px; font-weight: bold; margin: 0; color: var(--text-main); font-family: monospace;}
         .clock-date { font-size: 10px; margin: 0; color: var(--text-muted); text-transform: uppercase;}
-        
-        /* 🟢 Logo Size Fixed */
         .ir-logo-right { width: 45px; height: 45px; background: white; border-radius: 50%; padding: 3px; border: 2px solid var(--accent); object-fit: contain; }
         
         .content-area { padding: 25px; flex-grow: 1; width: 100%; box-sizing: border-box; overflow: hidden; }
@@ -113,7 +111,10 @@
             * { margin: 0; padding: 0; box-sizing: border-box; } 
             @page { size: A4 landscape; margin: 10mm; }
             body { background: #fff !important; color: #000 !important; } 
-            .sidebar, .smart-header, .top-bar, .col-action, .footer, .btn-add { display: none !important; }
+            
+            /* 🟢 Fixed: Added .del-btn and .no-print to ensure ALL buttons are hidden in PDF */
+            .sidebar, .smart-header, .top-bar, .col-action, .footer, .btn-add, .del-btn, .no-print { display: none !important; }
+            
             .main-wrapper { margin: 0 !important; width: 100% !important; } 
             .content-area, .app-container { padding: 0 !important; border: none !important; box-shadow: none !important; background: transparent !important; }
             
@@ -143,7 +144,6 @@
             .th-income { background: #d1fae5 !important; } .th-expense { background: #ffe4e6 !important; }
             .edit-box { border: none !important; background: transparent !important; padding: 0 !important; color: #000 !important; word-break: break-word !important; }
             
-            /* ১০০% পারফেক্ট ল্যান্ডস্কেপ কলাম পার্সেন্টেজ */
             .col-sl { width: 5% !important; } .col-date { width: 10% !important; } .col-particulars { width: 35% !important; } 
             .col-bill { width: 15% !important; } .col-amount { width: 15% !important; text-align: right !important;} .col-remarks { width: 20% !important; }
         }
