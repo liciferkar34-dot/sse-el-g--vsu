@@ -256,8 +256,7 @@
             &copy; 2026 Enterprise Portal | Developed for Bishnupur Electric (G), South Eastern Railway.
         </footer>
     </div>
-
-    <script>
+<script>
         const ADMIN_PIN = "1234";
         let isAdmin = false;
         const allCategoriesList = ["General_Fund", "Vishwakarma_Puja", "Staff_Feast", "Farewell", "Contractor_Inv", "Others"];
@@ -338,10 +337,11 @@
                 </tr>`;
             });
 
+            // 🟢 Update: headline is now empty by default, and placeholder handles the faded text
             return `
             <div class="ledger-section">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <input type="text" class="ledger-headline-input" value="${ledger.headline}" ${readOnlyAttr} placeholder="Type Event Name or Headline here..." oninput="markUnsaved()">
+                    <input type="text" class="ledger-headline-input" value="${ledger.headline || ''}" ${readOnlyAttr} placeholder="Enter Title (e.g., Saraswati Puja 2026)..." oninput="markUnsaved()">
                     <button class="del-btn admin-only no-print" style="display:${displayAdmin}; background:var(--danger);" onclick="deleteSection(this)">🗑️ Delete Section</button>
                 </div>
 
@@ -371,7 +371,6 @@
             </div>`;
         }
 
-        // Add Empty Row Helpers
         function getEmptyRowHTML(isIncome) {
             const colorClass = isIncome ? 'inc-val' : 'exp-val';
             const colorCode = isIncome ? '#059669' : '#e11d48';
@@ -393,12 +392,12 @@
 
         function createNewSection() {
             const container = document.getElementById('ledgersContainer');
-            const newLedger = { headline: "New Section Name", income: [{},{},{}], expense: [{},{},{}] };
+            // 🟢 Update: headline empty by default
+            const newLedger = { headline: "", income: [{},{},{}], expense: [{},{},{}] };
             container.insertAdjacentHTML('beforeend', getLedgerHTML(newLedger, false));
             calculateFund(); markUnsaved();
         }
 
-        // Calculate Sub-totals & Grand Totals
         function calculateFund() {
             let grandIncome = 0; let grandExpense = 0;
             document.querySelectorAll('.ledger-section').forEach(sec => {
@@ -415,7 +414,6 @@
             document.getElementById('sumBalance').innerText = "₹ " + (grandIncome - grandExpense).toFixed(2);
         }
 
-        // SAVE & LOAD
         function saveTableData() {
             if(!isAdmin) return;
             const category = document.getElementById('filterCategory').value;
@@ -486,7 +484,8 @@
 
                 let catData = JSON.parse(localStorage.getItem(`officeFund_v6_${category}_${year}`)) || [];
                 if(catData.length === 0) {
-                    catData.push({ headline: "Enter Title (e.g., Saraswati Puja 2026)", income: [{},{},{}], expense: [{},{},{}] });
+                    // 🟢 Update: headline empty by default for new load
+                    catData.push({ headline: "", income: [{},{},{}], expense: [{},{},{}] });
                 }
                 catData.forEach(ledger => { container.insertAdjacentHTML('beforeend', getLedgerHTML(ledger, false)); });
             }
