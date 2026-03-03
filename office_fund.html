@@ -21,6 +21,7 @@
         }
         body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; color: var(--text-main); background: var(--bg-gradient); background-size: 200% 200%; display: flex; min-height: 100vh; overflow-x: hidden; transition: color 0.3s; }
         
+        /* Sidebar & Header */
         .sidebar { width: var(--sidebar-width); background: var(--glass-bg); backdrop-filter: blur(15px); border-right: 1px solid var(--glass-border); position: fixed; top: 0; left: 0; height: 100vh; display: flex; flex-direction: column; box-shadow: var(--shadow); z-index: 2000; transition: transform 0.4s; }
         .sidebar.collapsed { transform: translateX(-100%); }
         .sidebar-header { padding: 20px; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; gap: 15px; position: relative;}
@@ -43,6 +44,8 @@
         .clock-widget { text-align: right; }
         .clock-time { font-size: 16px; font-weight: bold; margin: 0; color: var(--text-main); font-family: monospace;}
         .clock-date { font-size: 10px; margin: 0; color: var(--text-muted); text-transform: uppercase;}
+        
+        /* 🟢 Logo Size Fixed */
         .ir-logo-right { width: 45px; height: 45px; background: white; border-radius: 50%; padding: 3px; border: 2px solid var(--accent); object-fit: contain; }
         
         .content-area { padding: 25px; flex-grow: 1; width: 100%; box-sizing: border-box; overflow: hidden; }
@@ -108,7 +111,7 @@
            ========================================= */
         @media print {
             * { margin: 0; padding: 0; box-sizing: border-box; } 
-            @page { size: A4 portrait; margin: 10mm; }
+            @page { size: A4 landscape; margin: 10mm; }
             body { background: #fff !important; color: #000 !important; } 
             .sidebar, .smart-header, .top-bar, .col-action, .footer, .btn-add { display: none !important; }
             .main-wrapper { margin: 0 !important; width: 100% !important; } 
@@ -127,13 +130,11 @@
             .summary-details h4 { font-size: 12px !important; text-align: center !important;}
             .summary-details h2 { font-size: 16px !important; margin: 0 !important; text-align: center !important;}
             
-            /* Section & Layout for Print */
             .ledger-section { background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin-bottom: 30px !important; page-break-inside: avoid;}
             .ledger-headline-input { border: none !important; font-size: 16px !important; color: #000 !important; font-weight: bold !important; margin-bottom: 5px !important; background: #e2e8f0 !important; padding: 5px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
             .cat-title-separator { font-size: 18px !important; color: #000 !important; border-bottom: 2px solid #000 !important; margin-top: 20px !important;}
             .table-section-title { font-size: 12px !important; margin: 10px 0 2px 0 !important; border: none !important; }
             
-            /* টেবিল ফিট করার পার্সেন্টেজ লজিক */
             .table-responsive { overflow: visible !important; border: none !important; width: 100% !important; margin-bottom: 10px !important; }
             table { width: 100% !important; max-width: 100% !important; min-width: 100% !important; border: 2px solid #000 !important; font-size: 11px !important; table-layout: fixed !important; }
             th, td { border: 1px solid #000 !important; padding: 4px 3px !important; color: #000 !important; word-wrap: break-word !important; overflow-wrap: break-word !important; white-space: normal !important; }
@@ -142,9 +143,9 @@
             .th-income { background: #d1fae5 !important; } .th-expense { background: #ffe4e6 !important; }
             .edit-box { border: none !important; background: transparent !important; padding: 0 !important; color: #000 !important; word-break: break-word !important; }
             
-            /* ১০০% পারফেক্ট কলাম পার্সেন্টেজ (সব টেবিলের জন্য প্রযোজ্য) */
-            .col-sl { width: 6% !important; } .col-date { width: 12% !important; } .col-particulars { width: 33% !important; } 
-            .col-bill { width: 14% !important; } .col-amount { width: 15% !important; text-align: right !important;} .col-remarks { width: 20% !important; }
+            /* ১০০% পারফেক্ট ল্যান্ডস্কেপ কলাম পার্সেন্টেজ */
+            .col-sl { width: 5% !important; } .col-date { width: 10% !important; } .col-particulars { width: 35% !important; } 
+            .col-bill { width: 15% !important; } .col-amount { width: 15% !important; text-align: right !important;} .col-remarks { width: 20% !important; }
         }
         @media (max-width: 950px) { .sidebar { transform: translateX(-100%); } .sidebar.active-mobile { transform: translateX(0); } .main-wrapper { margin-left: 0; width: 100%; } .close-sidebar-btn { display: block; } }
     </style>
@@ -169,6 +170,8 @@
             <a href="breakdown.html" class="menu-link"><span class="menu-icon">🛠️</span> Breakdown Report</a>
             <a href="material_stock.html" class="menu-link"><span class="menu-icon">📦</span> Materials Store</a>
             <a href="lift_report.html" class="menu-link"><span class="menu-icon">🛗</span> Lift Safety</a>
+            <a href="table5.html" class="menu-link"><span class="menu-icon">⏱️</span> NDA Record (Table 5)</a>
+            <a href="table7.html" class="menu-link"><span class="menu-icon">🚂</span> TA Record (Table 7)</a>
         </div>
     </aside>
 
@@ -224,7 +227,7 @@
                 <div class="top-bar no-print">
                     <div class="filter-group">
                         <label>📂 Category:</label>
-                        <select id="filterCategory" onchange="loadTableData()">
+                        <select id="filterCategory" onchange="categoryChanged()">
                             <option value="General_Fund">General Office Fund</option>
                             <option value="Vishwakarma_Puja">Vishwakarma Puja</option>
                             <option value="Staff_Feast">Staff Feast / Picnic</option>
@@ -233,10 +236,8 @@
                             <option value="Others">Others Fund / Misc.</option>
                             <option value="All" style="font-weight:bold; color:var(--accent);">🌍 All Categories (Overview)</option>
                         </select>
-                        <select id="filterYear" onchange="loadTableData()">
-                            <option value="2026">2026</option>
-                            <option value="2027">2027</option>
-                        </select>
+                        <select id="filterYear" onchange="categoryChanged()">
+                            </select>
                     </div>
 
                     <div class="btn-group">
@@ -256,14 +257,15 @@
             &copy; 2026 Enterprise Portal | Developed for Bishnupur Electric (G), South Eastern Railway.
         </footer>
     </div>
-<script>
-        // 🟢 এখানে আপনার Office Fund এর নতুন Deploy করা লিংকটি বসান:
+
+    <script>
+        // 🟢 এখানে আপনার Office Fund এর নতুন গুগল শিটের লিংকটি বসান:
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw3bQAfpudkt4jHrJku-hITj2q0-xELq8BMmTv3qzjMAvMJnQOr_EYJ91jNmbKb_FtB/exec'; 
 
         const ADMIN_PIN = "8918";
         let isAdmin = false;
         const allCategoriesList = ["General_Fund", "Vishwakarma_Puja", "Staff_Feast", "Farewell", "Contractor_Inv", "Others"];
-        let serverDataCache = []; // To store data from Google Sheets
+        let serverDataCache = []; 
 
         function toggleAdminMode() {
             if(isAdmin) {
@@ -293,7 +295,6 @@
             }
         }
 
-        // Clock & Sidebar
         function toggleSidebar() { if(window.innerWidth<=950){document.getElementById('sidebar').classList.toggle('active-mobile');document.getElementById('sidebarOverlay').classList.toggle('show');}else{document.getElementById('sidebar').classList.toggle('collapsed');document.getElementById('mainWrapper').classList.toggle('expanded');} }
         function closeSidebar() { if(window.innerWidth<=950){document.getElementById('sidebar').classList.remove('active-mobile');document.getElementById('sidebarOverlay').classList.remove('show');} }
         function updateClock() { const timeEl=document.getElementById('liveTime'),dateEl=document.getElementById('liveDate');if(!timeEl||!dateEl)return;const now=new Date();let h=now.getHours(),m=now.getMinutes(),s=now.getSeconds();h=h<10?'0'+h:h;m=m<10?'0'+m:m;s=s<10?'0'+s:s;timeEl.textContent=`${h}:${m}:${s}`;dateEl.textContent=now.toLocaleDateString('en-IN',{weekday:'short',year:'numeric',month:'short',day:'numeric'}); }
@@ -302,7 +303,15 @@
         function toggleTheme(){document.body.classList.toggle('dark-mode');if(document.body.classList.contains('dark-mode')){localStorage.setItem('erp-theme','dark');if(themeBtn)themeBtn.textContent='☀️';}else{localStorage.setItem('erp-theme','light');if(themeBtn)themeBtn.textContent='🌙';}}
 
         window.onload = () => { 
-            document.getElementById('filterYear').value = new Date().getFullYear().toString(); 
+            // 🟢 Dynamic Year Generator (2000 to CurrentYear + 5)
+            const yearSelect = document.getElementById('filterYear');
+            yearSelect.innerHTML = '';
+            const currY = new Date().getFullYear();
+            for(let y = 2000; y <= currY + 5; y++) {
+                yearSelect.innerHTML += `<option value="${y}">${y}</option>`;
+            }
+            yearSelect.value = currY.toString(); 
+            
             fetchDataFromServer(); 
         };
 
@@ -373,7 +382,6 @@
             document.getElementById('sumBalance').innerText = "₹ " + (grandIncome - grandExpense).toFixed(2);
         }
 
-        // 🟢 Google Sheets Fetch & Save Logic
         async function fetchDataFromServer() {
             const container = document.getElementById('ledgersContainer');
             container.innerHTML = '<h3 style="text-align:center; color:var(--accent); padding:30px;">⏳ Fetching records from server...</h3>';
@@ -383,7 +391,7 @@
                 renderCategoryView();
             } catch (error) {
                 container.innerHTML = '<h3 style="text-align:center; color:red; padding:30px;">❌ Failed to connect. Showing local offline data (if any).</h3>';
-                renderCategoryView(); // Fallback to local if fetch fails
+                renderCategoryView(); 
             }
         }
 
@@ -396,7 +404,6 @@
             const year = document.getElementById('filterYear').value;
             const selText = document.getElementById('filterCategory').options[document.getElementById('filterCategory').selectedIndex].text;
 
-            // Helper to find data in Server Cache or LocalStorage fallback
             function getCatData(catStr, yrStr) {
                 let parsedData = null;
                 if(serverDataCache.length > 0) {
@@ -477,10 +484,8 @@
                 allLedgersData.push({ headline: headline, income: incRows, expense: expRows });
             });
 
-            // Save to LocalStorage as Backup
             localStorage.setItem(`officeFund_v6_${category}_${year}`, JSON.stringify(allLedgersData));
 
-            // Save to Google Sheets
             let payload = { year: year, category: category, fundData: JSON.stringify(allLedgersData) };
             
             try {
@@ -494,7 +499,6 @@
                 saveBtn.style.background = 'var(--success)';
                 saveBtn.style.color = 'white';
                 
-                // Refresh server cache
                 fetchDataFromServer();
             } catch (error) {
                 saveBtn.innerHTML = '❌ Server Error (Saved Locally)';
@@ -509,7 +513,5 @@
             }, 3000);
         }
     </script>
-</body>
-</html>
 </body>
 </html>
