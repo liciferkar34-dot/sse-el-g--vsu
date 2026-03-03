@@ -44,6 +44,8 @@
         .clock-widget { text-align: right; }
         .clock-time { font-size: 16px; font-weight: bold; margin: 0; color: var(--text-main); font-family: monospace;}
         .clock-date { font-size: 10px; margin: 0; color: var(--text-muted); text-transform: uppercase;}
+        
+        /* 🟢 Logo Size Fixed */
         .ir-logo-right { width: 45px; height: 45px; background: white; border-radius: 50%; padding: 3px; border: 2px solid var(--accent); object-fit: contain; }
         
         .content-area { padding: 25px; flex-grow: 1; width: 100%; box-sizing: border-box; overflow: hidden; }
@@ -273,7 +275,7 @@
                 document.getElementById('authBtn').innerHTML = '🔒 Admin Login';
                 document.getElementById('authBtn').style.background = 'var(--danger)';
                 document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
-                document.querySelectorAll('.edit-box').forEach(el => el.setAttribute('contenteditable', 'false'));
+                document.querySelectorAll('.edit-box:not(.auto-sl)').forEach(el => el.setAttribute('contenteditable', 'false'));
                 document.querySelectorAll('.ledger-headline-input').forEach(el => el.setAttribute('readonly', 'true'));
                 alert("Logged out successfully. View Only mode activated.");
             } else {
@@ -287,7 +289,7 @@
                     if(cat !== 'All') {
                         document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
                         document.querySelectorAll('.col-action').forEach(el => el.style.display = 'table-cell');
-                        document.querySelectorAll('.edit-box').forEach(el => el.setAttribute('contenteditable', 'true'));
+                        document.querySelectorAll('.edit-box:not(.auto-sl)').forEach(el => el.setAttribute('contenteditable', 'true'));
                         document.querySelectorAll('.ledger-headline-input').forEach(el => el.removeAttribute('readonly'));
                     }
                     alert("Access Granted! You can now edit the fund accounts.");
@@ -303,7 +305,6 @@
         function toggleTheme(){document.body.classList.toggle('dark-mode');if(document.body.classList.contains('dark-mode')){localStorage.setItem('erp-theme','dark');if(themeBtn)themeBtn.textContent='☀️';}else{localStorage.setItem('erp-theme','light');if(themeBtn)themeBtn.textContent='🌙';}}
 
         window.onload = () => { 
-            // 🟢 Dynamic Year Generator (2000 to CurrentYear + 5)
             const yearSelect = document.getElementById('filterYear');
             yearSelect.innerHTML = '';
             const currY = new Date().getFullYear();
@@ -321,6 +322,20 @@
             if(saveBtn.innerText === '💾 Save Accounts') { saveBtn.innerText = '💾 Save Accounts*'; saveBtn.style.background = '#eab308'; }
         }
 
+        // 🟢 Auto Serial Number Logic
+        function updateSerialNumbers() {
+            document.querySelectorAll('.ledger-section').forEach(sec => {
+                sec.querySelectorAll('.income-body tr').forEach((row, index) => {
+                    let slCell = row.querySelector('.auto-sl');
+                    if(slCell) slCell.innerText = index + 1;
+                });
+                sec.querySelectorAll('.expense-body tr').forEach((row, index) => {
+                    let slCell = row.querySelector('.auto-sl');
+                    if(slCell) slCell.innerText = index + 1;
+                });
+            });
+        }
+
         function getLedgerHTML(ledger, isReadOnly) {
             const isEdit = (!isReadOnly && isAdmin) ? 'true' : 'false';
             const displayAdmin = (!isReadOnly && isAdmin) ? 'inline-block' : 'none';
@@ -328,13 +343,13 @@
             const readOnlyAttr = (!isReadOnly && isAdmin) ? '' : 'readonly';
 
             let incomeHTML = '';
-            ledger.income.forEach(row => {
-                incomeHTML += `<tr><td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.sl || ''}</div></td><td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.date || ''}</div></td><td><div class="edit-box" contenteditable="${isEdit}">${row.particulars || ''}</div></td><td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.bill || ''}</div></td><td><div class="edit-box num-box inc-val" contenteditable="${isEdit}" oninput="calculateFund()" style="color:#059669;">${row.amount || ''}</div></td><td><div class="edit-box" contenteditable="${isEdit}">${row.remarks || ''}</div></td><td class="col-action admin-only no-print" style="display:${displayDelCell}"><button class="del-btn" onclick="deleteRow(this)">🗑️</button></td></tr>`;
+            ledger.income.forEach((row, index) => {
+                incomeHTML += `<tr><td><div class="edit-box auto-sl" contenteditable="false" style="text-align:center; font-weight:bold; pointer-events:none;">${index + 1}</div></td><td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.date || ''}</div></td><td><div class="edit-box" contenteditable="${isEdit}">${row.particulars || ''}</div></td><td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.bill || ''}</div></td><td><div class="edit-box num-box inc-val" contenteditable="${isEdit}" oninput="calculateFund()" style="color:#059669;">${row.amount || ''}</div></td><td><div class="edit-box" contenteditable="${isEdit}">${row.remarks || ''}</div></td><td class="col-action admin-only no-print" style="display:${displayDelCell}"><button class="del-btn" onclick="deleteRow(this)">🗑️</button></td></tr>`;
             });
 
             let expenseHTML = '';
-            ledger.expense.forEach(row => {
-                expenseHTML += `<tr><td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.sl || ''}</div></td><td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.date || ''}</div></td><td><div class="edit-box" contenteditable="${isEdit}">${row.particulars || ''}</div></td><td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.bill || ''}</div></td><td><div class="edit-box num-box exp-val" contenteditable="${isEdit}" oninput="calculateFund()" style="color:#e11d48;">${row.amount || ''}</div></td><td><div class="edit-box" contenteditable="${isEdit}">${row.remarks || ''}</div></td><td class="col-action admin-only no-print" style="display:${displayDelCell}"><button class="del-btn" onclick="deleteRow(this)">🗑️</button></td></tr>`;
+            ledger.expense.forEach((row, index) => {
+                expenseHTML += `<tr><td><div class="edit-box auto-sl" contenteditable="false" style="text-align:center; font-weight:bold; pointer-events:none;">${index + 1}</div></td><td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.date || ''}</div></td><td><div class="edit-box" contenteditable="${isEdit}">${row.particulars || ''}</div></td><td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.bill || ''}</div></td><td><div class="edit-box num-box exp-val" contenteditable="${isEdit}" oninput="calculateFund()" style="color:#e11d48;">${row.amount || ''}</div></td><td><div class="edit-box" contenteditable="${isEdit}">${row.remarks || ''}</div></td><td class="col-action admin-only no-print" style="display:${displayDelCell}"><button class="del-btn" onclick="deleteRow(this)">🗑️</button></td></tr>`;
             });
 
             return `
@@ -349,22 +364,22 @@
                 <div class="table-responsive"><table class="expense-table"><thead><tr><th class="col-sl th-expense">Sl.</th><th class="col-date th-expense">Date</th><th class="col-particulars th-expense">Particulars</th><th class="col-bill th-expense">Voucher No.</th><th class="col-amount th-expense">Amount [-]</th><th class="col-remarks th-expense">Remarks</th><th class="col-action admin-only no-print th-expense" style="display:${displayDelCell}">Del</th></tr></thead><tbody class="expense-body">${expenseHTML}</tbody><tfoot><tr><th colspan="4" style="text-align: right;">Sub-Total Expense (₹):</th><th class="sec-exp-total" style="text-align: right; color: #e11d48; font-size:15px; font-family:monospace;">0.00</th><th></th><th class="col-action admin-only no-print" style="display:${displayDelCell}"></th></tr></tfoot></table></div>
             </div>`;
         }
-
         function getEmptyRowHTML(isIncome) {
             const colorClass = isIncome ? 'inc-val' : 'exp-val';
             const colorCode = isIncome ? '#059669' : '#e11d48';
-            return `<tr><td><div class="edit-box" contenteditable="true" style="text-align:center;"></div></td><td><div class="edit-box" contenteditable="true" style="text-align:center;"></div></td><td><div class="edit-box" contenteditable="true"></div></td><td><div class="edit-box" contenteditable="true" style="text-align:center;"></div></td><td><div class="edit-box num-box ${colorClass}" contenteditable="true" oninput="calculateFund()" style="color:${colorCode};"></div></td><td><div class="edit-box" contenteditable="true"></div></td><td class="col-action admin-only no-print" style="display:table-cell"><button class="del-btn" onclick="deleteRow(this)">🗑️</button></td></tr>`;
+            return `<tr><td><div class="edit-box auto-sl" contenteditable="false" style="text-align:center; font-weight:bold; pointer-events:none;"></div></td><td><div class="edit-box" contenteditable="true" style="text-align:center;"></div></td><td><div class="edit-box" contenteditable="true"></div></td><td><div class="edit-box" contenteditable="true" style="text-align:center;"></div></td><td><div class="edit-box num-box ${colorClass}" contenteditable="true" oninput="calculateFund()" style="color:${colorCode};"></div></td><td><div class="edit-box" contenteditable="true"></div></td><td class="col-action admin-only no-print" style="display:table-cell"><button class="del-btn" onclick="deleteRow(this)">🗑️</button></td></tr>`;
         }
-        function addNewIncomeRow(btn) { btn.parentElement.nextElementSibling.querySelector('tbody').insertAdjacentHTML('beforeend', getEmptyRowHTML(true)); markUnsaved(); }
-        function addNewExpenseRow(btn) { btn.parentElement.nextElementSibling.querySelector('tbody').insertAdjacentHTML('beforeend', getEmptyRowHTML(false)); markUnsaved(); }
-        function deleteRow(btn) { if(confirm("Delete this record?")) { btn.parentElement.parentElement.remove(); calculateFund(); markUnsaved(); } }
-        function deleteSection(btn) { if(confirm("WARNING: Delete this entire section with all its records?")) { btn.closest('.ledger-section').remove(); calculateFund(); markUnsaved(); } }
+        
+        function addNewIncomeRow(btn) { btn.parentElement.nextElementSibling.querySelector('tbody').insertAdjacentHTML('beforeend', getEmptyRowHTML(true)); updateSerialNumbers(); markUnsaved(); }
+        function addNewExpenseRow(btn) { btn.parentElement.nextElementSibling.querySelector('tbody').insertAdjacentHTML('beforeend', getEmptyRowHTML(false)); updateSerialNumbers(); markUnsaved(); }
+        function deleteRow(btn) { if(confirm("Delete this record?")) { btn.parentElement.parentElement.remove(); calculateFund(); updateSerialNumbers(); markUnsaved(); } }
+        function deleteSection(btn) { if(confirm("WARNING: Delete this entire section with all its records?")) { btn.closest('.ledger-section').remove(); calculateFund(); updateSerialNumbers(); markUnsaved(); } }
 
         function createNewSection() {
             const container = document.getElementById('ledgersContainer');
             const newLedger = { headline: "", income: [{},{},{}], expense: [{},{},{}] };
             container.insertAdjacentHTML('beforeend', getLedgerHTML(newLedger, false));
-            calculateFund(); markUnsaved();
+            calculateFund(); updateSerialNumbers(); markUnsaved();
         }
 
         function calculateFund() {
@@ -448,6 +463,7 @@
                 catData.forEach(ledger => { container.insertAdjacentHTML('beforeend', getLedgerHTML(ledger, false)); });
             }
             calculateFund();
+            updateSerialNumbers();
         }
 
         async function saveTableData() {
