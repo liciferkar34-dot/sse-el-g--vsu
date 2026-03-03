@@ -248,6 +248,9 @@
                     <div class="btn-group">
                         <button class="btn btn-login" id="authBtn" onclick="toggleAdminMode()">🔒 Admin Login</button>
                         <button class="btn btn-add admin-only" id="addSecBtn" onclick="createNewSection()" style="background:#0284c7;">➕ Add New Section</button>
+                        
+                        <button class="btn admin-only" id="clearCatBtn" onclick="clearCategoryData()" style="background:var(--danger);">🗑️ Clear Category</button>
+                        
                         <button class="btn btn-save admin-only" id="saveBtnUI" onclick="saveTableData()">💾 Save Accounts</button>
                         <button class="btn btn-print" onclick="window.print()">🖨️ Print Statement</button>
                     </div>
@@ -257,11 +260,11 @@
                     </div>
 
             </div>
-        </div>
-        <footer class="footer">
+        </div><footer class="footer">
             &copy; 2026 Enterprise Portal | Developed for Bishnupur Electric (G), South Eastern Railway.
         </footer>
     </div>
+
     <script>
         // 🟢 আপনার Office Fund এর গুগল শিট লিংকটি এখানে বসান:
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw3bQAfpudkt4jHrJku-hITj2q0-xELq8BMmTv3qzjMAvMJnQOr_EYJ91jNmbKb_FtB/exec'; 
@@ -294,7 +297,7 @@
                         document.querySelectorAll('.edit-box:not(.auto-sl)').forEach(el => el.setAttribute('contenteditable', 'true'));
                         document.querySelectorAll('.ledger-headline-input').forEach(el => el.removeAttribute('readonly'));
                     }
-                    alert("Access Granted! You can now edit the fund accounts.");
+                    alert("Access Granted! You can now edit and delete the fund accounts.");
                 } else if(enteredPin !== null) { alert("Incorrect PIN!"); }
             }
         }
@@ -364,8 +367,7 @@
                 <div class="table-section-title title-expense"><span>📤 Part B: Expenditure / Payment</span><button class="btn btn-add admin-only no-print" style="background:#e11d48; display:${displayAdmin};" onclick="addNewExpenseRow(this)">➕ Add Expense</button></div>
                 <div class="table-responsive"><table class="expense-table"><thead><tr><th class="col-sl th-expense">Sl.</th><th class="col-date th-expense">Date</th><th class="col-particulars th-expense">Particulars</th><th class="col-bill th-expense">Voucher No.</th><th class="col-amount th-expense">Amount [-]</th><th class="col-remarks th-expense">Remarks</th><th class="col-action admin-only no-print th-expense" style="display:${displayDelCell}">Del</th></tr></thead><tbody class="expense-body">${expenseHTML}</tbody><tfoot><tr><th colspan="4" style="text-align: right;">Sub-Total Expense (₹):</th><th class="sec-exp-total" style="text-align: right; color: #e11d48; font-size:15px; font-family:monospace;">0.00</th><th></th><th class="col-action admin-only no-print" style="display:${displayDelCell}"></th></tr></tfoot></table></div>
             </div>`;
-        }
-        function getEmptyRowHTML(isIncome) {
+        }function getEmptyRowHTML(isIncome) {
             const colorClass = isIncome ? 'inc-val' : 'exp-val';
             const colorCode = isIncome ? '#059669' : '#e11d48';
             return `<tr><td><div class="edit-box auto-sl" contenteditable="false" style="text-align:center; font-weight:bold; pointer-events:none;"></div></td><td><div class="edit-box" contenteditable="true" style="text-align:center;"></div></td><td><div class="edit-box" contenteditable="true"></div></td><td><div class="edit-box" contenteditable="true" style="text-align:center;"></div></td><td><div class="edit-box num-box ${colorClass}" contenteditable="true" oninput="calculateFund()" style="color:${colorCode};"></div></td><td><div class="edit-box" contenteditable="true"></div></td><td class="col-action admin-only no-print" style="display:table-cell"><button class="del-btn" onclick="deleteRow(this)">🗑️</button></td></tr>`;
@@ -373,12 +375,27 @@
         
         function addNewIncomeRow(btn) { btn.parentElement.nextElementSibling.querySelector('tbody').insertAdjacentHTML('beforeend', getEmptyRowHTML(true)); updateSerialNumbers(); markUnsaved(); }
         function addNewExpenseRow(btn) { btn.parentElement.nextElementSibling.querySelector('tbody').insertAdjacentHTML('beforeend', getEmptyRowHTML(false)); updateSerialNumbers(); markUnsaved(); }
+        
         function deleteRow(btn) { if(confirm("Delete this record?")) { btn.parentElement.parentElement.remove(); calculateFund(); updateSerialNumbers(); markUnsaved(); } }
-        function deleteSection(btn) { if(confirm("WARNING: Delete this entire section with all its records?")) { btn.closest('.ledger-section').remove(); calculateFund(); updateSerialNumbers(); markUnsaved(); } }
+        function deleteSection(btn) { if(confirm("WARNING: Delete this entire section with all its records? Click 'Save Accounts' afterwards to update server.")) { btn.closest('.ledger-section').remove(); calculateFund(); updateSerialNumbers(); markUnsaved(); } }
+
+        // 🟢 NEW: Clear Entire Category Logic
+        function clearCategoryData() {
+            if(!isAdmin) return;
+            if(confirm("🚨 CRITICAL WARNING: Are you sure you want to permanently DELETE ALL DATA for this category in the selected year?")) {
+                document.getElementById('ledgersContainer').innerHTML = '';
+                calculateFund();
+                saveTableData(); // Automatically sync empty state to server
+            }
+        }
 
         function createNewSection() {
             const container = document.getElementById('ledgersContainer');
             const newLedger = { headline: "", income: [{},{},{}], expense: [{},{},{}] };
+            
+            // Remove 'No data' message if exists
+            if(container.querySelector('.no-data-msg')) container.innerHTML = '';
+            
             container.insertAdjacentHTML('beforeend', getLedgerHTML(newLedger, false));
             calculateFund(); updateSerialNumbers(); markUnsaved();
         }
@@ -398,19 +415,14 @@
             document.getElementById('sumBalance').innerText = "₹ " + (grandIncome - grandExpense).toFixed(2);
         }
 
-        // 🟢 FIX: Changed this function so it fires properly when Dropdowns are changed
         async function fetchDataFromServer() {
             const container = document.getElementById('ledgersContainer');
             container.innerHTML = '<h3 style="text-align:center; color:var(--accent); padding:30px;">⏳ Fetching live data from server...</h3>';
             try {
                 const response = await fetch(SCRIPT_URL + "?t=" + new Date().getTime(), { method: 'GET', redirect: 'follow' });
-                if(response.ok) {
-                    serverDataCache = await response.json(); 
-                }
-            } catch (error) {
-                console.error("Fetch Error:", error);
-            }
-            renderCategoryView(); // Always render view, even if fetch fails (fallback to local storage)
+                if(response.ok) { serverDataCache = await response.json(); }
+            } catch (error) { console.error("Fetch Error:", error); }
+            renderCategoryView(); 
         }
 
         function renderCategoryView() {
@@ -437,6 +449,7 @@
             if(category === 'All') {
                 document.getElementById('saveBtnUI').style.display = 'none';
                 document.getElementById('addSecBtn').style.display = 'none';
+                document.getElementById('clearCatBtn').style.display = 'none';
                 document.getElementById('printCategoryTitle').innerText = "Consolidated Accounts Overview (" + year + ")";
                 
                 let hasData = false;
@@ -451,17 +464,29 @@
                         catData.forEach(ledger => { container.insertAdjacentHTML('beforeend', getLedgerHTML(ledger, true)); });
                     }
                 });
-                if(!hasData) container.innerHTML = '<h3 style="text-align:center; color:var(--text-muted); margin-top:30px;">No records found for any category in ' + year + '.</h3>';
+                if(!hasData) container.innerHTML = '<h3 class="no-data-msg" style="text-align:center; color:var(--text-muted); margin-top:30px;">No records found for any category in ' + year + '.</h3>';
             } else {
                 document.getElementById('printCategoryTitle').innerText = selText + " (" + year + ")";
-                if(isAdmin) { document.getElementById('saveBtnUI').style.display = 'inline-block'; document.getElementById('addSecBtn').style.display = 'inline-block'; }
-                else { document.getElementById('addSecBtn').style.display = 'none'; }
+                if(isAdmin) { 
+                    document.getElementById('saveBtnUI').style.display = 'inline-block'; 
+                    document.getElementById('addSecBtn').style.display = 'inline-block'; 
+                    document.getElementById('clearCatBtn').style.display = 'inline-block';
+                } else { 
+                    document.getElementById('addSecBtn').style.display = 'none'; 
+                    document.getElementById('clearCatBtn').style.display = 'none';
+                }
 
                 let catData = getCatData(category, year);
+                
+                // 🟢 FIX: Do NOT auto-generate blank section if empty. Show message instead.
                 if(catData.length === 0) {
-                    catData.push({ headline: "", income: [{},{},{}], expense: [{},{},{}] });
+                    container.innerHTML = `<div class="no-data-msg" style="text-align:center; padding: 40px; border: 2px dashed var(--glass-border); border-radius: 10px; margin-top: 20px;">
+                        <h3 style="color:var(--text-muted); margin-bottom: 10px;">No Data Found in ${year}</h3>
+                        <p style="color:var(--text-main); font-size: 14px;">Admin can click <b>➕ Add New Section</b> to start recording data.</p>
+                    </div>`;
+                } else {
+                    catData.forEach(ledger => { container.insertAdjacentHTML('beforeend', getLedgerHTML(ledger, false)); });
                 }
-                catData.forEach(ledger => { container.insertAdjacentHTML('beforeend', getLedgerHTML(ledger, false)); });
             }
             calculateFund();
             updateSerialNumbers();
