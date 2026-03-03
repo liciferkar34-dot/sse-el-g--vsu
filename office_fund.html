@@ -21,7 +21,6 @@
         }
         body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; color: var(--text-main); background: var(--bg-gradient); background-size: 200% 200%; display: flex; min-height: 100vh; overflow-x: hidden; transition: color 0.3s; }
         
-        /* Sidebar & Header */
         .sidebar { width: var(--sidebar-width); background: var(--glass-bg); backdrop-filter: blur(15px); border-right: 1px solid var(--glass-border); position: fixed; top: 0; left: 0; height: 100vh; display: flex; flex-direction: column; box-shadow: var(--shadow); z-index: 2000; transition: transform 0.4s; }
         .sidebar.collapsed { transform: translateX(-100%); }
         .sidebar-header { padding: 20px; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; gap: 15px; position: relative;}
@@ -32,7 +31,6 @@
         .menu-items { padding: 20px 0; overflow-y: auto; flex-grow: 1; }
         .menu-link { display: flex; align-items: center; gap: 15px; padding: 12px 25px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 600; transition: 0.3s; border-left: 4px solid transparent; }
         .menu-link:hover, .menu-link.active { background: rgba(128,128,128,0.1); border-left-color: var(--accent); color: var(--accent); }
-        .menu-icon { font-size: 18px; }
         .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 1999; display: none; opacity: 0; transition: 0.3s; }
         .sidebar-overlay.show { display: block; opacity: 1; }
         
@@ -45,11 +43,8 @@
         .clock-widget { text-align: right; }
         .clock-time { font-size: 16px; font-weight: bold; margin: 0; color: var(--text-main); font-family: monospace;}
         .clock-date { font-size: 10px; margin: 0; color: var(--text-muted); text-transform: uppercase;}
-        
-        /* 🟢 এই লাইনটি মিস হয়ে গেছিল, যা লোগোর সাইজ ঠিক করবে */
         .ir-logo-right { width: 45px; height: 45px; background: white; border-radius: 50%; padding: 3px; border: 2px solid var(--accent); object-fit: contain; }
         
-        /* Main Container */
         .content-area { padding: 25px; flex-grow: 1; width: 100%; box-sizing: border-box; overflow: hidden; }
         .app-container { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; box-shadow: var(--shadow); padding: 25px; width: 100%; box-sizing: border-box;}
         body.dark-mode .app-container { background: #1e293b; border-color: #334155; }
@@ -66,9 +61,7 @@
 
         .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; background: rgba(128,128,128,0.05); padding: 15px; border-radius: 8px; border: 1px solid var(--glass-border);}
         .filter-group { display: flex; align-items: center; gap: 10px; font-weight: bold; color: var(--text-main); flex-wrap: wrap;}
-        .filter-group select, .headline-input { padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; color: #0f172a; font-size: 14px; font-weight: bold; outline: none;}
-        .headline-input { width: 220px; border: 2px solid var(--accent); transition: 0.3s;}
-        .headline-input:focus { box-shadow: 0 0 8px var(--accent-glow); }
+        .filter-group select { padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; color: #0f172a; font-size: 14px; font-weight: bold; outline: none;}
         
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap;}
         .btn { padding: 8px 15px; font-size: 13px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; transition: 0.3s; color: white; display: flex; align-items: center; gap: 5px;}
@@ -78,39 +71,40 @@
         .btn-login { background: var(--danger); } .btn-login:hover { background: #be123c; }
         .admin-only { display: none; }
         
-        /* Table Layouts */
-        .table-section-title { font-size: 18px; font-weight: bold; margin: 30px 0 10px 0; color: var(--text-main); display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--glass-border); padding-bottom: 10px; }
-        .title-income { color: #059669; }
-        .title-expense { color: #e11d48; }
+        /* Ledger Sections */
+        .ledger-section { background: rgba(128,128,128,0.02); border: 1px solid #cbd5e1; border-radius: 10px; padding: 20px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);}
+        body.dark-mode .ledger-section { background: rgba(30,41,59,0.5); border-color: #334155; }
+        .ledger-headline-input { width: 100%; border: none; border-bottom: 2px dashed var(--accent); background: transparent; font-size: 20px; font-weight: 800; color: var(--accent); padding: 5px; margin-bottom: 15px; outline: none; transition: 0.3s;}
+        body.dark-mode .ledger-headline-input { color: #38bdf8; }
+        .ledger-headline-input:focus { border-bottom-style: solid; box-shadow: 0 10px 10px -10px var(--accent-glow); }
+        .cat-title-separator { font-size: 20px; font-weight: bold; color: var(--text-main); margin: 30px 0 15px 0; border-bottom: 2px solid var(--accent); padding-bottom: 5px; }
 
-        .table-responsive { width: 100%; overflow-x: auto; border: 2px solid #94a3b8; border-radius: 4px; margin-bottom: 15px;}
+        .table-section-title { font-size: 16px; font-weight: bold; margin: 15px 0 10px 0; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); padding-bottom: 5px; }
+        .title-income { color: #059669; } .title-expense { color: #e11d48; }
+
+        .table-responsive { width: 100%; overflow-x: auto; border: 2px solid #94a3b8; border-radius: 4px; margin-bottom: 10px;}
         table { width: 100%; min-width: 900px; border-collapse: collapse; font-size: 14px; background: #ffffff; }
         body.dark-mode table { background: #0f172a; }
         
-        th, td { padding: 10px; text-align: left; vertical-align: middle; border: 1px solid #94a3b8; color: #000;}
+        th, td { padding: 8px; text-align: left; vertical-align: middle; border: 1px solid #94a3b8; color: #000;}
         body.dark-mode th, body.dark-mode td { border-color: #475569; color: #fff;}
         th { font-weight: bold; text-align: center; font-size: 13px;}
         
-        .th-income { background: #d1fae5; color: #064e3b; }
-        .th-expense { background: #ffe4e6; color: #881337; }
-        body.dark-mode .th-income { background: #064e3b; color: #d1fae5; }
-        body.dark-mode .th-expense { background: #881337; color: #ffe4e6; }
-        
-        /* Group Header (For 'All' Category) */
-        .group-header td { background: #cbd5e1 !important; color: #0f172a !important; font-weight: bold; text-align: center; font-size: 15px; text-transform: uppercase; letter-spacing: 1px;}
-        body.dark-mode .group-header td { background: #334155 !important; color: #fff !important; }
+        .th-income { background: #d1fae5; color: #064e3b; } .th-expense { background: #ffe4e6; color: #881337; }
+        body.dark-mode .th-income { background: #064e3b; color: #d1fae5; } body.dark-mode .th-expense { background: #881337; color: #ffe4e6; }
 
         .col-sl { width: 50px; text-align: center;} .col-date { width: 100px; text-align: center;} .col-particulars { width: 300px; } .col-bill { width: 120px; text-align: center;} .col-amount { width: 130px; text-align: right; font-weight: bold;} .col-remarks { width: 200px; } .col-action { width: 50px; text-align: center; }
+        
         .edit-box { outline: none; min-height: 25px; width: 100%; line-height: 1.4; padding: 5px; border-radius: 4px; box-sizing: border-box; word-wrap: break-word;}
-        .num-box { text-align: right; font-family: monospace; font-size: 16px; color: #000;}
+        .num-box { text-align: right; font-family: monospace; font-size: 15px; color: #000;}
         body.dark-mode .num-box { color: #fff; }
         body.admin-mode .edit-box:hover { background-color: #f1f5f9; } body.admin-mode.dark-mode .edit-box:hover { background-color: #334155; } body.admin-mode .edit-box:focus { background-color: #fff; border: 2px dashed var(--accent); color: #000; }
-        .del-btn { background: var(--danger); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold;}
+        .del-btn { background: var(--danger); color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;}
         .footer { text-align: center; padding: 20px; background: var(--glass-bg); color: var(--text-muted); font-size: 12px; border-top: 1px solid var(--glass-border); font-weight: bold; }
         .print-only-header { display: none; }
 
         /* =========================================
-           PDF PRINT FIX (১০০% পারফেক্ট ল্যান্ডস্কেপ ফিট)
+           PDF PRINT FIX (১০০% গ্যারান্টিড ল্যান্ডস্কেপ ফিট)
            ========================================= */
         @media print {
             * { margin: 0; padding: 0; box-sizing: border-box; } 
@@ -133,19 +127,22 @@
             .summary-details h4 { font-size: 12px !important; text-align: center !important;}
             .summary-details h2 { font-size: 16px !important; margin: 0 !important; text-align: center !important;}
             
-            .table-section-title { font-size: 14px !important; margin: 15px 0 5px 0 !important; border-bottom: 1px solid #000 !important; }
+            /* Section & Layout for Print */
+            .ledger-section { background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin-bottom: 30px !important; page-break-inside: avoid;}
+            .ledger-headline-input { border: none !important; font-size: 16px !important; color: #000 !important; font-weight: bold !important; margin-bottom: 5px !important; background: #e2e8f0 !important; padding: 5px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
+            .cat-title-separator { font-size: 18px !important; color: #000 !important; border-bottom: 2px solid #000 !important; margin-top: 20px !important;}
+            .table-section-title { font-size: 12px !important; margin: 10px 0 2px 0 !important; border: none !important; }
             
-            .table-responsive { overflow: visible !important; border: none !important; width: 100% !important; margin-bottom: 20px !important; }
-            table { width: 100% !important; max-width: 100% !important; min-width: 100% !important; border: 2px solid #000 !important; font-size: 11px !important; table-layout: fixed !important; page-break-inside: auto;}
-            tr { page-break-inside: avoid; page-break-after: auto; }
+            /* টেবিল ফিট করার পার্সেন্টেজ লজিক */
+            .table-responsive { overflow: visible !important; border: none !important; width: 100% !important; margin-bottom: 10px !important; }
+            table { width: 100% !important; max-width: 100% !important; min-width: 100% !important; border: 2px solid #000 !important; font-size: 11px !important; table-layout: fixed !important; }
             th, td { border: 1px solid #000 !important; padding: 4px 3px !important; color: #000 !important; word-wrap: break-word !important; overflow-wrap: break-word !important; white-space: normal !important; }
             th { font-size: 11px !important; font-weight: bold !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             
             .th-income { background: #d1fae5 !important; } .th-expense { background: #ffe4e6 !important; }
-            .group-header td { background: #e2e8f0 !important; font-size: 12px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
             .edit-box { border: none !important; background: transparent !important; padding: 0 !important; color: #000 !important; word-break: break-word !important; }
             
-            /* ১০০% পারফেক্ট কলাম পার্সেন্টেজ */
+            /* ১০০% পারফেক্ট কলাম পার্সেন্টেজ (সব টেবিলের জন্য প্রযোজ্য) */
             .col-sl { width: 6% !important; } .col-date { width: 12% !important; } .col-particulars { width: 33% !important; } 
             .col-bill { width: 14% !important; } .col-amount { width: 15% !important; text-align: right !important;} .col-remarks { width: 20% !important; }
         }
@@ -227,7 +224,7 @@
                 <div class="top-bar no-print">
                     <div class="filter-group">
                         <label>📂 Category:</label>
-                        <select id="filterCategory" onchange="categoryChanged()">
+                        <select id="filterCategory" onchange="loadTableData()">
                             <option value="General_Fund">General Office Fund</option>
                             <option value="Vishwakarma_Puja">Vishwakarma Puja</option>
                             <option value="Staff_Feast">Staff Feast / Picnic</option>
@@ -236,76 +233,22 @@
                             <option value="Others">Others Fund / Misc.</option>
                             <option value="All" style="font-weight:bold; color:var(--accent);">🌍 All Categories (Overview)</option>
                         </select>
-                        <select id="filterYear" onchange="categoryChanged()">
+                        <select id="filterYear" onchange="loadTableData()">
                             <option value="2026">2026</option>
                             <option value="2027">2027</option>
                         </select>
-                        
-                        <input type="text" id="customHeadline" class="headline-input" placeholder="Type specific Title/Headline..." oninput="markUnsaved()">
                     </div>
 
                     <div class="btn-group">
                         <button class="btn btn-login" id="authBtn" onclick="toggleAdminMode()">🔒 Admin Login</button>
+                        <button class="btn btn-add admin-only" id="addSecBtn" onclick="createNewSection()" style="background:#0284c7;">➕ Add New Section</button>
                         <button class="btn btn-save admin-only" id="saveBtnUI" onclick="saveTableData()">💾 Save Accounts</button>
-                        <button class="btn btn-print" onclick="window.print()">🖨️ Print</button>
+                        <button class="btn btn-print" onclick="window.print()">🖨️ Print Statement</button>
                     </div>
                 </div>
 
-                <div class="table-section-title title-income">
-                    <span>📥 Part A: Income / Collection Details</span>
-                    <button class="btn btn-add admin-only" id="addIncBtn" style="background:#059669;" onclick="addIncomeRow()">➕ Add</button>
-                </div>
-                <div class="table-responsive">
-                    <table id="incomeTable">
-                        <thead>
-                            <tr>
-                                <th class="col-sl th-income">Sl.</th>
-                                <th class="col-date th-income">Date</th>
-                                <th class="col-particulars th-income">Particulars / Source of Income</th>
-                                <th class="col-bill th-income">Receipt No.</th>
-                                <th class="col-amount th-income">Amount (₹) [+]</th>
-                                <th class="col-remarks th-income">Remarks / Sign</th>
-                                <th class="col-action admin-only no-print th-income">Del</th>
-                            </tr>
-                        </thead>
-                        <tbody id="incomeBody"></tbody>
-                        <tfoot>
-                            <tr>
-                                <th colspan="4" style="text-align: right; font-weight: bold; font-size: 15px;">Total Income (₹):</th>
-                                <th id="bottomTotalIncome" style="text-align: right; font-weight: bold; font-size: 16px; color: #059669; font-family: monospace;">0.00</th>
-                                <th></th><th class="col-action admin-only no-print"></th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-
-                <div class="table-section-title title-expense">
-                    <span>📤 Part B: Expenditure / Payment Details</span>
-                    <button class="btn btn-add admin-only" id="addExpBtn" style="background:#e11d48;" onclick="addExpenseRow()">➕ Add</button>
-                </div>
-                <div class="table-responsive">
-                    <table id="expenseTable">
-                        <thead>
-                            <tr>
-                                <th class="col-sl th-expense">Sl.</th>
-                                <th class="col-date th-expense">Date</th>
-                                <th class="col-particulars th-expense">Particulars / Details of Expense</th>
-                                <th class="col-bill th-expense">Bill / Voucher No.</th>
-                                <th class="col-amount th-expense">Amount (₹) [-]</th>
-                                <th class="col-remarks th-expense">Remarks / Sign</th>
-                                <th class="col-action admin-only no-print th-expense">Del</th>
-                            </tr>
-                        </thead>
-                        <tbody id="expenseBody"></tbody>
-                        <tfoot>
-                            <tr>
-                                <th colspan="4" style="text-align: right; font-weight: bold; font-size: 15px;">Total Expenditure (₹):</th>
-                                <th id="bottomTotalExpense" style="text-align: right; font-weight: bold; font-size: 16px; color: #e11d48; font-family: monospace;">0.00</th>
-                                <th></th><th class="col-action admin-only no-print"></th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
+                <div id="ledgersContainer">
+                    </div>
 
             </div>
         </div>
@@ -326,6 +269,7 @@
                 document.getElementById('authBtn').style.background = 'var(--danger)';
                 document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
                 document.querySelectorAll('.edit-box').forEach(el => el.setAttribute('contenteditable', 'false'));
+                document.querySelectorAll('.ledger-headline-input').forEach(el => el.setAttribute('readonly', 'true'));
                 alert("Logged out successfully. View Only mode activated.");
             } else {
                 let enteredPin = prompt("Enter PIN to modify financial records:");
@@ -339,13 +283,13 @@
                         document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
                         document.querySelectorAll('.col-action').forEach(el => el.style.display = 'table-cell');
                         document.querySelectorAll('.edit-box').forEach(el => el.setAttribute('contenteditable', 'true'));
+                        document.querySelectorAll('.ledger-headline-input').forEach(el => el.removeAttribute('readonly'));
                     }
                     alert("Access Granted! You can now edit the fund accounts.");
                 } else if(enteredPin !== null) { alert("Incorrect PIN!"); }
             }
         }
 
-        // Clock & Sidebar
         function toggleSidebar() { if(window.innerWidth<=950){document.getElementById('sidebar').classList.toggle('active-mobile');document.getElementById('sidebarOverlay').classList.toggle('show');}else{document.getElementById('sidebar').classList.toggle('collapsed');document.getElementById('mainWrapper').classList.toggle('expanded');} }
         function closeSidebar() { if(window.innerWidth<=950){document.getElementById('sidebar').classList.remove('active-mobile');document.getElementById('sidebarOverlay').classList.remove('show');} }
         function updateClock() { const timeEl=document.getElementById('liveTime'),dateEl=document.getElementById('liveDate');if(!timeEl||!dateEl)return;const now=new Date();let h=now.getHours(),m=now.getMinutes(),s=now.getSeconds();h=h<10?'0'+h:h;m=m<10?'0'+m:m;s=s<10?'0'+s:s;timeEl.textContent=`${h}:${m}:${s}`;dateEl.textContent=now.toLocaleDateString('en-IN',{weekday:'short',year:'numeric',month:'short',day:'numeric'}); }
@@ -353,187 +297,198 @@
         const themeBtn=document.getElementById('themeToggle');if(localStorage.getItem('erp-theme')==='dark'){document.body.classList.add('dark-mode');if(themeBtn)themeBtn.textContent='☀️';}
         function toggleTheme(){document.body.classList.toggle('dark-mode');if(document.body.classList.contains('dark-mode')){localStorage.setItem('erp-theme','dark');if(themeBtn)themeBtn.textContent='☀️';}else{localStorage.setItem('erp-theme','light');if(themeBtn)themeBtn.textContent='🌙';}}
 
-        window.onload = () => { document.getElementById('filterYear').value = new Date().getFullYear().toString(); categoryChanged(); };
-
-        function categoryChanged() {
-            const cat = document.getElementById('filterCategory').value;
-            const year = document.getElementById('filterYear').value;
-            const headlineInput = document.getElementById('customHeadline');
-
-            if(cat === 'All') {
-                headlineInput.style.display = 'none'; // Hide headline box
-                // Force Hide Add/Save buttons even if Admin
-                document.getElementById('saveBtnUI').style.display = 'none';
-                document.getElementById('addIncBtn').style.display = 'none';
-                document.getElementById('addExpBtn').style.display = 'none';
-                document.getElementById('printCategoryTitle').innerText = "Consolidated Accounts Overview (" + year + ")";
-            } else {
-                headlineInput.style.display = 'inline-block';
-                // Fetch saved headline
-                let savedHead = localStorage.getItem(`officeFund_v4_head_${cat}_${year}`);
-                headlineInput.value = savedHead ? savedHead : '';
-                
-                if(isAdmin) {
-                    document.getElementById('saveBtnUI').style.display = 'inline-block';
-                    document.getElementById('addIncBtn').style.display = 'inline-block';
-                    document.getElementById('addExpBtn').style.display = 'inline-block';
-                }
-                updatePrintTitle();
-            }
-            loadTableData();
-        }
-
-        function updatePrintTitle() {
-            const selectElement = document.getElementById('filterCategory');
-            const cat = selectElement.value;
-            if(cat === 'All') return;
-            const year = document.getElementById('filterYear').value;
-            const headline = document.getElementById('customHeadline').value;
-            const defaultText = selectElement.options[selectElement.selectedIndex].text;
-            
-            document.getElementById('printCategoryTitle').innerText = (headline ? headline : defaultText) + " (" + year + ")";
-        }
+        window.onload = () => { document.getElementById('filterYear').value = new Date().getFullYear().toString(); loadTableData(); };
 
         function markUnsaved() {
-            updatePrintTitle();
             if(!isAdmin) return;
             const saveBtn = document.querySelector('.btn-save');
             if(saveBtn.innerText === '💾 Save Accounts') { saveBtn.innerText = '💾 Save Accounts*'; saveBtn.style.background = '#eab308'; }
         }
 
-        // ROW ADDERS (isViewOnly flag used for 'All' category)
-        function addHeaderRow(tbodyId, title) {
-            const tbody = document.getElementById(tbodyId);
-            const tr = document.createElement('tr');
-            tr.className = "group-header";
-            tr.innerHTML = `<td colspan="7">--- ${title} ---</td>`;
-            tbody.appendChild(tr);
+        // HTML Generator for a Single Section (Ledger Block)
+        function getLedgerHTML(ledger, isReadOnly) {
+            const isEdit = (!isReadOnly && isAdmin) ? 'true' : 'false';
+            const displayAdmin = (!isReadOnly && isAdmin) ? 'inline-block' : 'none';
+            const displayDelCell = (!isReadOnly && isAdmin) ? 'table-cell' : 'none';
+            const readOnlyAttr = (!isReadOnly && isAdmin) ? '' : 'readonly';
+
+            let incomeHTML = '';
+            ledger.income.forEach(row => {
+                incomeHTML += `<tr>
+                    <td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.sl || ''}</div></td>
+                    <td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.date || ''}</div></td>
+                    <td><div class="edit-box" contenteditable="${isEdit}">${row.particulars || ''}</div></td>
+                    <td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.bill || ''}</div></td>
+                    <td><div class="edit-box num-box inc-val" contenteditable="${isEdit}" oninput="calculateFund()" style="color:#059669;">${row.amount || ''}</div></td>
+                    <td><div class="edit-box" contenteditable="${isEdit}">${row.remarks || ''}</div></td>
+                    <td class="col-action admin-only no-print" style="display:${displayDelCell}"><button class="del-btn" onclick="deleteRow(this)">🗑️</button></td>
+                </tr>`;
+            });
+
+            let expenseHTML = '';
+            ledger.expense.forEach(row => {
+                expenseHTML += `<tr>
+                    <td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.sl || ''}</div></td>
+                    <td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.date || ''}</div></td>
+                    <td><div class="edit-box" contenteditable="${isEdit}">${row.particulars || ''}</div></td>
+                    <td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${row.bill || ''}</div></td>
+                    <td><div class="edit-box num-box exp-val" contenteditable="${isEdit}" oninput="calculateFund()" style="color:#e11d48;">${row.amount || ''}</div></td>
+                    <td><div class="edit-box" contenteditable="${isEdit}">${row.remarks || ''}</div></td>
+                    <td class="col-action admin-only no-print" style="display:${displayDelCell}"><button class="del-btn" onclick="deleteRow(this)">🗑️</button></td>
+                </tr>`;
+            });
+
+            return `
+            <div class="ledger-section">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <input type="text" class="ledger-headline-input" value="${ledger.headline}" ${readOnlyAttr} placeholder="Type Event Name or Headline here..." oninput="markUnsaved()">
+                    <button class="del-btn admin-only no-print" style="display:${displayAdmin}; background:var(--danger);" onclick="deleteSection(this)">🗑️ Delete Section</button>
+                </div>
+
+                <div class="table-section-title title-income">
+                    <span>📥 Part A: Income / Collection</span>
+                    <button class="btn btn-add admin-only no-print" style="background:#059669; display:${displayAdmin};" onclick="addNewIncomeRow(this)">➕ Add Income</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="income-table">
+                        <thead><tr><th class="col-sl th-income">Sl.</th><th class="col-date th-income">Date</th><th class="col-particulars th-income">Particulars</th><th class="col-bill th-income">Receipt No.</th><th class="col-amount th-income">Amount [+]</th><th class="col-remarks th-income">Remarks</th><th class="col-action admin-only no-print th-income" style="display:${displayDelCell}">Del</th></tr></thead>
+                        <tbody class="income-body">${incomeHTML}</tbody>
+                        <tfoot><tr><th colspan="4" style="text-align: right;">Sub-Total Income (₹):</th><th class="sec-inc-total" style="text-align: right; color: #059669; font-size:15px; font-family:monospace;">0.00</th><th></th><th class="col-action admin-only no-print" style="display:${displayDelCell}"></th></tr></tfoot>
+                    </table>
+                </div>
+
+                <div class="table-section-title title-expense">
+                    <span>📤 Part B: Expenditure / Payment</span>
+                    <button class="btn btn-add admin-only no-print" style="background:#e11d48; display:${displayAdmin};" onclick="addNewExpenseRow(this)">➕ Add Expense</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="expense-table">
+                        <thead><tr><th class="col-sl th-expense">Sl.</th><th class="col-date th-expense">Date</th><th class="col-particulars th-expense">Particulars</th><th class="col-bill th-expense">Voucher No.</th><th class="col-amount th-expense">Amount [-]</th><th class="col-remarks th-expense">Remarks</th><th class="col-action admin-only no-print th-expense" style="display:${displayDelCell}">Del</th></tr></thead>
+                        <tbody class="expense-body">${expenseHTML}</tbody>
+                        <tfoot><tr><th colspan="4" style="text-align: right;">Sub-Total Expense (₹):</th><th class="sec-exp-total" style="text-align: right; color: #e11d48; font-size:15px; font-family:monospace;">0.00</th><th></th><th class="col-action admin-only no-print" style="display:${displayDelCell}"></th></tr></tfoot>
+                    </table>
+                </div>
+            </div>`;
         }
 
-        function addIncomeRow(data = {}, isViewOnly = false) {
-            const tbody = document.getElementById('incomeBody');
-            const tr = document.createElement('tr');
-            const isEdit = (!isViewOnly && isAdmin) ? 'true' : 'false';
-            const displayDel = (!isViewOnly && isAdmin) ? 'table-cell' : 'none';
-            
-            tr.innerHTML = `
-                <td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${data.sl || ''}</div></td>
-                <td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${data.date || ''}</div></td>
-                <td><div class="edit-box" contenteditable="${isEdit}">${data.particulars || ''}</div></td>
-                <td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${data.bill || ''}</div></td>
-                <td><div class="edit-box num-box inc-val" contenteditable="${isEdit}" oninput="calculateFund()" style="color:#059669;">${data.amount || ''}</div></td>
-                <td><div class="edit-box" contenteditable="${isEdit}">${data.remarks || ''}</div></td>
-                <td class="col-action admin-only no-print" style="display:${displayDel}"><button class="del-btn" onclick="deleteRow(this)">🗑️</button></td>
-            `;
-            tbody.appendChild(tr);
+        // Add Empty Row Helpers
+        function getEmptyRowHTML(isIncome) {
+            const colorClass = isIncome ? 'inc-val' : 'exp-val';
+            const colorCode = isIncome ? '#059669' : '#e11d48';
+            return `<tr>
+                <td><div class="edit-box" contenteditable="true" style="text-align:center;"></div></td>
+                <td><div class="edit-box" contenteditable="true" style="text-align:center;"></div></td>
+                <td><div class="edit-box" contenteditable="true"></div></td>
+                <td><div class="edit-box" contenteditable="true" style="text-align:center;"></div></td>
+                <td><div class="edit-box num-box ${colorClass}" contenteditable="true" oninput="calculateFund()" style="color:${colorCode};"></div></td>
+                <td><div class="edit-box" contenteditable="true"></div></td>
+                <td class="col-action admin-only no-print" style="display:table-cell"><button class="del-btn" onclick="deleteRow(this)">🗑️</button></td>
+            </tr>`;
         }
-
-        function addExpenseRow(data = {}, isViewOnly = false) {
-            const tbody = document.getElementById('expenseBody');
-            const tr = document.createElement('tr');
-            const isEdit = (!isViewOnly && isAdmin) ? 'true' : 'false';
-            const displayDel = (!isViewOnly && isAdmin) ? 'table-cell' : 'none';
-            
-            tr.innerHTML = `
-                <td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${data.sl || ''}</div></td>
-                <td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${data.date || ''}</div></td>
-                <td><div class="edit-box" contenteditable="${isEdit}">${data.particulars || ''}</div></td>
-                <td><div class="edit-box" contenteditable="${isEdit}" style="text-align:center;">${data.bill || ''}</div></td>
-                <td><div class="edit-box num-box exp-val" contenteditable="${isEdit}" oninput="calculateFund()" style="color:#e11d48;">${data.amount || ''}</div></td>
-                <td><div class="edit-box" contenteditable="${isEdit}">${data.remarks || ''}</div></td>
-                <td class="col-action admin-only no-print" style="display:${displayDel}"><button class="del-btn" onclick="deleteRow(this)">🗑️</button></td>
-            `;
-            tbody.appendChild(tr);
-        }
-
+        function addNewIncomeRow(btn) { btn.parentElement.nextElementSibling.querySelector('tbody').insertAdjacentHTML('beforeend', getEmptyRowHTML(true)); markUnsaved(); }
+        function addNewExpenseRow(btn) { btn.parentElement.nextElementSibling.querySelector('tbody').insertAdjacentHTML('beforeend', getEmptyRowHTML(false)); markUnsaved(); }
+        
         function deleteRow(btn) { if(confirm("Delete this record?")) { btn.parentElement.parentElement.remove(); calculateFund(); markUnsaved(); } }
+        function deleteSection(btn) { if(confirm("WARNING: Delete this entire section with all its records?")) { btn.closest('.ledger-section').remove(); calculateFund(); markUnsaved(); } }
 
-        function calculateFund() {
-            let totalIncome = 0; let totalExpense = 0;
-            document.querySelectorAll('.inc-val').forEach(cell => { let val = parseFloat(cell.innerText.replace(/,/g, '')) || 0; totalIncome += val; });
-            document.querySelectorAll('.exp-val').forEach(cell => { let val = parseFloat(cell.innerText.replace(/,/g, '')) || 0; totalExpense += val; });
-            
-            let runningBalance = totalIncome - totalExpense;
-            document.getElementById('sumIncome').innerText = "₹ " + totalIncome.toFixed(2);
-            document.getElementById('sumExpense').innerText = "₹ " + totalExpense.toFixed(2);
-            document.getElementById('sumBalance').innerText = "₹ " + runningBalance.toFixed(2);
-            document.getElementById('bottomTotalIncome').innerText = totalIncome.toFixed(2);
-            document.getElementById('bottomTotalExpense').innerText = totalExpense.toFixed(2);
+        function createNewSection() {
+            const container = document.getElementById('ledgersContainer');
+            const newLedger = { headline: "New Section Name", income: [{},{},{}], expense: [{},{},{}] };
+            container.insertAdjacentHTML('beforeend', getLedgerHTML(newLedger, false));
+            calculateFund(); markUnsaved();
         }
 
+        // Calculate Sub-totals & Grand Totals
+        function calculateFund() {
+            let grandIncome = 0; let grandExpense = 0;
+            document.querySelectorAll('.ledger-section').forEach(sec => {
+                let secInc = 0; let secExp = 0;
+                sec.querySelectorAll('.inc-val').forEach(cell => { secInc += parseFloat(cell.innerText.replace(/,/g, '')) || 0; });
+                sec.querySelectorAll('.exp-val').forEach(cell => { secExp += parseFloat(cell.innerText.replace(/,/g, '')) || 0; });
+                sec.querySelector('.sec-inc-total').innerText = secInc.toFixed(2);
+                sec.querySelector('.sec-exp-total').innerText = secExp.toFixed(2);
+                grandIncome += secInc; grandExpense += secExp;
+            });
+
+            document.getElementById('sumIncome').innerText = "₹ " + grandIncome.toFixed(2);
+            document.getElementById('sumExpense').innerText = "₹ " + grandExpense.toFixed(2);
+            document.getElementById('sumBalance').innerText = "₹ " + (grandIncome - grandExpense).toFixed(2);
+        }
+
+        // SAVE & LOAD
         function saveTableData() {
             if(!isAdmin) return;
             const category = document.getElementById('filterCategory').value;
-            if(category === 'All') return; // Cannot save in All mode
+            if(category === 'All') return; 
             
             const year = document.getElementById('filterYear').value;
-            const headline = document.getElementById('customHeadline').value;
+            const storageKey = `officeFund_v6_${category}_${year}`;
             
-            localStorage.setItem(`officeFund_v4_head_${category}_${year}`, headline);
-
-            const fundData = { income: [], expense: [] };
-            const incRows = document.getElementById('incomeBody').querySelectorAll('tr:not(.group-header)');
-            incRows.forEach(row => {
-                fundData.income.push({
-                    sl: row.cells[0].innerText, date: row.cells[1].innerText, particulars: row.cells[2].innerText,
-                    bill: row.cells[3].innerText, amount: row.querySelector('.inc-val').innerText, remarks: row.cells[5].innerText
+            let allLedgersData = [];
+            document.querySelectorAll('.ledger-section').forEach(sec => {
+                let headline = sec.querySelector('.ledger-headline-input').value;
+                let incRows = []; let expRows = [];
+                
+                sec.querySelector('.income-body').querySelectorAll('tr').forEach(tr => {
+                    let amount = tr.querySelector('.inc-val').innerText.trim();
+                    let part = tr.cells[2].innerText.trim();
+                    if(amount !== '' || part !== '') {
+                        incRows.push({ sl: tr.cells[0].innerText, date: tr.cells[1].innerText, particulars: part, bill: tr.cells[3].innerText, amount: amount, remarks: tr.cells[5].innerText });
+                    }
                 });
+                
+                sec.querySelector('.expense-body').querySelectorAll('tr').forEach(tr => {
+                    let amount = tr.querySelector('.exp-val').innerText.trim();
+                    let part = tr.cells[2].innerText.trim();
+                    if(amount !== '' || part !== '') {
+                        expRows.push({ sl: tr.cells[0].innerText, date: tr.cells[1].innerText, particulars: part, bill: tr.cells[3].innerText, amount: amount, remarks: tr.cells[5].innerText });
+                    }
+                });
+                
+                allLedgersData.push({ headline: headline, income: incRows, expense: expRows });
             });
 
-            const expRows = document.getElementById('expenseBody').querySelectorAll('tr:not(.group-header)');
-            expRows.forEach(row => {
-                fundData.expense.push({
-                    sl: row.cells[0].innerText, date: row.cells[1].innerText, particulars: row.cells[2].innerText,
-                    bill: row.cells[3].innerText, amount: row.querySelector('.exp-val').innerText, remarks: row.cells[5].innerText
-                });
-            });
-            
-            localStorage.setItem(`officeFund_v4_data_${category}_${year}`, JSON.stringify(fundData));
-            
+            localStorage.setItem(storageKey, JSON.stringify(allLedgersData));
             const saveBtn = document.querySelector('.btn-save');
             saveBtn.innerHTML = '✅ Saved!'; saveBtn.style.background = 'var(--success)'; saveBtn.style.color = 'white';
             setTimeout(() => { saveBtn.innerHTML = '💾 Save Accounts'; saveBtn.style.background = '#f59e0b'; saveBtn.style.color = '#000'; }, 2000);
-            updatePrintTitle();
         }
 
         function loadTableData() {
+            const container = document.getElementById('ledgersContainer');
+            container.innerHTML = ''; 
             const category = document.getElementById('filterCategory').value;
             const year = document.getElementById('filterYear').value;
-            
-            document.getElementById('incomeBody').innerHTML = ''; 
-            document.getElementById('expenseBody').innerHTML = ''; 
+            const selText = document.getElementById('filterCategory').options[document.getElementById('filterCategory').selectedIndex].text;
 
             if(category === 'All') {
-                // Load combined data for ALL categories
+                document.getElementById('saveBtnUI').style.display = 'none';
+                document.getElementById('addSecBtn').style.display = 'none';
+                document.getElementById('printCategoryTitle').innerText = "Consolidated Accounts Overview (" + year + ")";
+                
                 let hasData = false;
                 allCategoriesList.forEach(cat => {
-                    let savedData = JSON.parse(localStorage.getItem(`officeFund_v4_data_${cat}_${year}`));
-                    let catHeadline = localStorage.getItem(`officeFund_v4_head_${cat}_${year}`) || cat.replace('_', ' ');
-                    
-                    if(savedData && (savedData.income.length > 0 || savedData.expense.length > 0)) {
-                        let hasValidInc = savedData.income.some(r => r.amount || r.particulars);
-                        let hasValidExp = savedData.expense.some(r => r.amount || r.particulars);
-                        
-                        if(hasValidInc) { addHeaderRow('incomeBody', catHeadline); savedData.income.forEach(row => { if(row.amount || row.particulars) addIncomeRow(row, true); }); hasData = true;}
-                        if(hasValidExp) { addHeaderRow('expenseBody', catHeadline); savedData.expense.forEach(row => { if(row.amount || row.particulars) addExpenseRow(row, true); }); hasData = true;}
+                    let catData = JSON.parse(localStorage.getItem(`officeFund_v6_${cat}_${year}`)) || [];
+                    if(catData.length > 0) {
+                        hasData = true;
+                        let catTitle = document.createElement('div');
+                        catTitle.className = "cat-title-separator";
+                        catTitle.innerText = "📁 Category: " + cat.replace('_', ' ');
+                        container.appendChild(catTitle);
+                        catData.forEach(ledger => { container.insertAdjacentHTML('beforeend', getLedgerHTML(ledger, true)); });
                     }
                 });
-                if(!hasData) {
-                    document.getElementById('incomeBody').innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 20px;">No accounts found for this year.</td></tr>';
-                }
+                if(!hasData) container.innerHTML = '<h3 style="text-align:center; color:var(--text-muted); margin-top:30px;">No records found for any category in ' + year + '.</h3>';
             } else {
-                // Load single category
-                const savedData = JSON.parse(localStorage.getItem(`officeFund_v4_data_${category}_${year}`));
-                if (savedData) {
-                    if(savedData.income && savedData.income.length > 0) savedData.income.forEach(row => addIncomeRow(row));
-                    else for(let i=0; i<3; i++) addIncomeRow();
+                document.getElementById('printCategoryTitle').innerText = selText + " (" + year + ")";
+                if(isAdmin) { document.getElementById('saveBtnUI').style.display = 'inline-block'; document.getElementById('addSecBtn').style.display = 'inline-block'; }
+                else { document.getElementById('addSecBtn').style.display = 'none'; }
 
-                    if(savedData.expense && savedData.expense.length > 0) savedData.expense.forEach(row => addExpenseRow(row));
-                    else for(let i=0; i<3; i++) addExpenseRow();
-                } else {
-                    for(let i=0; i<3; i++) addIncomeRow();
-                    for(let i=0; i<3; i++) addExpenseRow();
+                let catData = JSON.parse(localStorage.getItem(`officeFund_v6_${category}_${year}`)) || [];
+                if(catData.length === 0) {
+                    catData.push({ headline: "Enter Title (e.g., Saraswati Puja 2026)", income: [{},{},{}], expense: [{},{},{}] });
                 }
+                catData.forEach(ledger => { container.insertAdjacentHTML('beforeend', getLedgerHTML(ledger, false)); });
             }
             calculateFund();
         }
