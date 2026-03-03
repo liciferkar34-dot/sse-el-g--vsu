@@ -21,7 +21,6 @@
         }
         body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; color: var(--text-main); background: var(--bg-gradient); background-size: 200% 200%; display: flex; min-height: 100vh; overflow-x: hidden; transition: color 0.3s; }
         
-        /* Sidebar & Header */
         .sidebar { width: var(--sidebar-width); background: var(--glass-bg); backdrop-filter: blur(15px); border-right: 1px solid var(--glass-border); position: fixed; top: 0; left: 0; height: 100vh; display: flex; flex-direction: column; box-shadow: var(--shadow); z-index: 2000; transition: transform 0.4s; }
         .sidebar.collapsed { transform: translateX(-100%); }
         .sidebar-header { padding: 20px; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; gap: 15px; position: relative;}
@@ -44,8 +43,6 @@
         .clock-widget { text-align: right; }
         .clock-time { font-size: 16px; font-weight: bold; margin: 0; color: var(--text-main); font-family: monospace;}
         .clock-date { font-size: 10px; margin: 0; color: var(--text-muted); text-transform: uppercase;}
-        
-        /* 🟢 Logo Size Fixed */
         .ir-logo-right { width: 45px; height: 45px; background: white; border-radius: 50%; padding: 3px; border: 2px solid var(--accent); object-fit: contain; }
         
         .content-area { padding: 25px; flex-grow: 1; width: 100%; box-sizing: border-box; overflow: hidden; }
@@ -64,7 +61,7 @@
 
         .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; background: rgba(128,128,128,0.05); padding: 15px; border-radius: 8px; border: 1px solid var(--glass-border);}
         .filter-group { display: flex; align-items: center; gap: 10px; font-weight: bold; color: var(--text-main); flex-wrap: wrap;}
-        .filter-group select { padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; color: #0f172a; font-size: 14px; font-weight: bold; outline: none;}
+        .filter-group select { padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; color: #0f172a; font-size: 14px; font-weight: bold; outline: none; cursor: pointer;}
         
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap;}
         .btn { padding: 8px 15px; font-size: 13px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; transition: 0.3s; color: white; display: flex; align-items: center; gap: 5px;}
@@ -107,24 +104,25 @@
         .print-only-header { display: none; }
 
         /* =========================================
-           PDF PRINT FIX (১০০% গ্যারান্টিড ল্যান্ডস্কেপ ফিট)
+           PDF PRINT FIX (১০০% মাল্টি-পেজ গ্যারান্টিড)
            ========================================= */
         @media print {
             * { margin: 0; padding: 0; box-sizing: border-box; } 
             @page { size: A4 landscape; margin: 10mm; }
-            body { background: #fff !important; color: #000 !important; } 
             
-            /* 🟢 Fixed: Added .del-btn and .no-print to ensure ALL buttons are hidden in PDF */
+            /* Overriding all hidden overflows to prevent page cut-offs */
+            html, body { background: #fff !important; color: #000 !important; overflow: visible !important; height: auto !important; display: block !important; }
+            
             .sidebar, .smart-header, .top-bar, .col-action, .footer, .btn-add, .del-btn, .no-print { display: none !important; }
             
-            .main-wrapper { margin: 0 !important; width: 100% !important; } 
-            .content-area, .app-container { padding: 0 !important; border: none !important; box-shadow: none !important; background: transparent !important; }
+            .main-wrapper { margin: 0 !important; width: 100% !important; overflow: visible !important; display: block !important; } 
+            .content-area, .app-container { padding: 0 !important; border: none !important; box-shadow: none !important; background: transparent !important; overflow: visible !important; display: block !important; }
             
-            .print-only-header { display: block !important; text-align: center !important; margin-bottom: 20px !important; border-bottom: 2px solid #000 !important; padding-bottom: 10px !important;}
+            .print-only-header { display: block !important; text-align: center !important; margin-bottom: 20px !important; border-bottom: 2px solid #000 !important; padding-bottom: 10px !important; page-break-inside: avoid;}
             .print-only-header h1 { margin: 0 !important; font-size: 24px !important; color: #000 !important; text-transform: uppercase !important; text-decoration: underline !important;}
             .print-only-header h2 { margin: 5px 0 0 0 !important; font-size: 16px !important; color: #333 !important; }
             
-            .fund-summary { margin-bottom: 20px !important; display: flex !important; width: 100% !important; gap: 10px !important;} 
+            .fund-summary { margin-bottom: 20px !important; display: flex !important; width: 100% !important; gap: 10px !important; page-break-inside: avoid;} 
             .summary-card { padding: 10px !important; flex: 1 !important; border: 1px solid #000 !important; border-radius: 5px !important; justify-content: center !important;} 
             .summary-card.card-income { background: #d1fae5 !important; color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
             .summary-card.card-expense { background: #ffe4e6 !important; color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
@@ -133,19 +131,26 @@
             .summary-details h4 { font-size: 12px !important; text-align: center !important;}
             .summary-details h2 { font-size: 16px !important; margin: 0 !important; text-align: center !important;}
             
-            .ledger-section { background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin-bottom: 30px !important; page-break-inside: avoid;}
+            /* Section page breaks handled */
+            #ledgersContainer { display: block !important; overflow: visible !important; }
+            .ledger-section { background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin-bottom: 30px !important; display: block !important; page-break-inside: auto !important;}
             .ledger-headline-input { border: none !important; font-size: 16px !important; color: #000 !important; font-weight: bold !important; margin-bottom: 5px !important; background: #e2e8f0 !important; padding: 5px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
-            .cat-title-separator { font-size: 18px !important; color: #000 !important; border-bottom: 2px solid #000 !important; margin-top: 20px !important;}
-            .table-section-title { font-size: 12px !important; margin: 10px 0 2px 0 !important; border: none !important; }
+            .cat-title-separator { font-size: 18px !important; color: #000 !important; border-bottom: 2px solid #000 !important; margin-top: 20px !important; page-break-after: avoid;}
+            .table-section-title { font-size: 12px !important; margin: 10px 0 2px 0 !important; border: none !important; page-break-after: avoid;}
             
-            .table-responsive { overflow: visible !important; border: none !important; width: 100% !important; margin-bottom: 10px !important; }
-            table { width: 100% !important; max-width: 100% !important; min-width: 100% !important; border: 2px solid #000 !important; font-size: 11px !important; table-layout: fixed !important; }
+            /* Table Break Logic */
+            .table-responsive { overflow: visible !important; border: none !important; width: 100% !important; margin-bottom: 10px !important; display: block !important; }
+            table { width: 100% !important; max-width: 100% !important; min-width: 100% !important; border: 2px solid #000 !important; font-size: 11px !important; table-layout: fixed !important; display: table !important; page-break-inside: auto !important; }
+            thead { display: table-header-group !important; }
+            tfoot { display: table-footer-group !important; }
+            tr { page-break-inside: avoid !important; page-break-after: auto !important; }
             th, td { border: 1px solid #000 !important; padding: 4px 3px !important; color: #000 !important; word-wrap: break-word !important; overflow-wrap: break-word !important; white-space: normal !important; }
             th { font-size: 11px !important; font-weight: bold !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             
             .th-income { background: #d1fae5 !important; } .th-expense { background: #ffe4e6 !important; }
             .edit-box { border: none !important; background: transparent !important; padding: 0 !important; color: #000 !important; word-break: break-word !important; }
             
+            /* Column Widths */
             .col-sl { width: 5% !important; } .col-date { width: 10% !important; } .col-particulars { width: 35% !important; } 
             .col-bill { width: 15% !important; } .col-amount { width: 15% !important; text-align: right !important;} .col-remarks { width: 20% !important; }
         }
@@ -172,8 +177,6 @@
             <a href="breakdown.html" class="menu-link"><span class="menu-icon">🛠️</span> Breakdown Report</a>
             <a href="material_stock.html" class="menu-link"><span class="menu-icon">📦</span> Materials Store</a>
             <a href="lift_report.html" class="menu-link"><span class="menu-icon">🛗</span> Lift Safety</a>
-            <a href="table5.html" class="menu-link"><span class="menu-icon">⏱️</span> NDA Record (Table 5)</a>
-            <a href="table7.html" class="menu-link"><span class="menu-icon">🚂</span> TA Record (Table 7)</a>
         </div>
     </aside>
 
@@ -229,7 +232,7 @@
                 <div class="top-bar no-print">
                     <div class="filter-group">
                         <label>📂 Category:</label>
-                        <select id="filterCategory" onchange="categoryChanged()">
+                        <select id="filterCategory" onchange="fetchDataFromServer()">
                             <option value="General_Fund">General Office Fund</option>
                             <option value="Vishwakarma_Puja">Vishwakarma Puja</option>
                             <option value="Staff_Feast">Staff Feast / Picnic</option>
@@ -238,7 +241,7 @@
                             <option value="Others">Others Fund / Misc.</option>
                             <option value="All" style="font-weight:bold; color:var(--accent);">🌍 All Categories (Overview)</option>
                         </select>
-                        <select id="filterYear" onchange="categoryChanged()">
+                        <select id="filterYear" onchange="fetchDataFromServer()">
                             </select>
                     </div>
 
@@ -259,9 +262,8 @@
             &copy; 2026 Enterprise Portal | Developed for Bishnupur Electric (G), South Eastern Railway.
         </footer>
     </div>
-
     <script>
-        // 🟢 এখানে আপনার Office Fund এর নতুন গুগল শিটের লিংকটি বসান:
+        // 🟢 আপনার Office Fund এর গুগল শিট লিংকটি এখানে বসান:
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw3bQAfpudkt4jHrJku-hITj2q0-xELq8BMmTv3qzjMAvMJnQOr_EYJ91jNmbKb_FtB/exec'; 
 
         const ADMIN_PIN = "8918";
@@ -322,7 +324,6 @@
             if(saveBtn.innerText === '💾 Save Accounts') { saveBtn.innerText = '💾 Save Accounts*'; saveBtn.style.background = '#eab308'; }
         }
 
-        // 🟢 Auto Serial Number Logic
         function updateSerialNumbers() {
             document.querySelectorAll('.ledger-section').forEach(sec => {
                 sec.querySelectorAll('.income-body tr').forEach((row, index) => {
@@ -397,20 +398,20 @@
             document.getElementById('sumBalance').innerText = "₹ " + (grandIncome - grandExpense).toFixed(2);
         }
 
+        // 🟢 FIX: Changed this function so it fires properly when Dropdowns are changed
         async function fetchDataFromServer() {
             const container = document.getElementById('ledgersContainer');
-            container.innerHTML = '<h3 style="text-align:center; color:var(--accent); padding:30px;">⏳ Fetching records from server...</h3>';
+            container.innerHTML = '<h3 style="text-align:center; color:var(--accent); padding:30px;">⏳ Fetching live data from server...</h3>';
             try {
                 const response = await fetch(SCRIPT_URL + "?t=" + new Date().getTime(), { method: 'GET', redirect: 'follow' });
-                serverDataCache = await response.json(); 
-                renderCategoryView();
+                if(response.ok) {
+                    serverDataCache = await response.json(); 
+                }
             } catch (error) {
-                container.innerHTML = '<h3 style="text-align:center; color:red; padding:30px;">❌ Failed to connect. Showing local offline data (if any).</h3>';
-                renderCategoryView(); 
+                console.error("Fetch Error:", error);
             }
+            renderCategoryView(); // Always render view, even if fetch fails (fallback to local storage)
         }
-
-        function categoryChanged() { renderCategoryView(); }
 
         function renderCategoryView() {
             const container = document.getElementById('ledgersContainer');
@@ -421,7 +422,7 @@
 
             function getCatData(catStr, yrStr) {
                 let parsedData = null;
-                if(serverDataCache.length > 0) {
+                if(serverDataCache && serverDataCache.length > 0) {
                     for(let i = 1; i < serverDataCache.length; i++) {
                         if(serverDataCache[i][0] == yrStr && serverDataCache[i][1] == catStr) {
                             try { parsedData = JSON.parse(serverDataCache[i][2]); } catch(e){}
